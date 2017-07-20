@@ -3,13 +3,13 @@
 namespace cio;
 
 
-class FormsTable extends ListTable {
+class EventsTable extends ListTable {
 
 	public function __construct() {
 
 		$args = array(
-			'singular' => __( 'Form', 'cio' ),
-			'plural'   => __( 'Forms', 'cio' )
+			'singular' => __( 'Event', 'cio' ),
+			'plural'   => __( 'Events', 'cio' )
 		);
 
 		parent::__construct( $args );
@@ -19,7 +19,7 @@ class FormsTable extends ListTable {
 	public function get_columns() {
 
 		$columns = array(
-			'cio_mapping_id' => __( 'Mapping', 'cio' ),
+			'cio_event'      => __( 'Event', 'cio' ),
 			'cio_form_name'  => __( 'Form', 'cio' )
 		);
 
@@ -30,7 +30,7 @@ class FormsTable extends ListTable {
 	public function get_sortable_columns() {
 
 		$columns = array(
-			'cio_mapping_id' => array( 'cio_mapping_id', false ),
+			'cio_event'      => array( 'cio_event', false ),
 			'cio_form_name'  => array( 'cio_form_name', false )
 		);
 
@@ -40,7 +40,7 @@ class FormsTable extends ListTable {
 
 	public function no_items() {
 
-		_e( 'No forms found', 'cio' );
+		_e( 'No events found', 'cio' );
 
 	}
 
@@ -80,28 +80,28 @@ class FormsTable extends ListTable {
 		global $wpdb;
 
 		$q = "SELECT DISTINCT 
-				id AS cio_mapping_id,
-		        form_id AS cio_form_id
-		      FROM {$wpdb->prefix}cio_field_mappings";
+				form
+				event AS cio_event,
+		      FROM {$wpdb->prefix}cio_events";
 
-		$forms    = \GFAPI::get_forms();
-		$mappings = $wpdb->get_results( $q, ARRAY_A );
+		$forms  = \GFAPI::get_forms();
+		$events = $wpdb->get_results( $q, ARRAY_A );
 
-		foreach ( $mappings as &$mapping ) {
+		foreach ( $events as &$event ) {
 
-			$form = array_filter( $forms, function ( $form ) use ( $mapping ) {
+			$form = array_filter( $forms, function ( $form ) use ( $event ) {
 
-				return $mapping['cio_form_id'] == $form['id'];
+				return $event['form_id'] == $form['id'];
 
 			} );
 
-			$mapping['cio_form_name'] = $form[0]['title'];
+			$event['cio_form_name'] = $form[0]['title'];
 
 		}
 
 
 
-		return $mappings;
+		return $events;
 
 	}
 

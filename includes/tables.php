@@ -8,12 +8,12 @@ function create_tables() {
 
 	include_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-	$q = "CREATE TABLE {$wpdb->prefix}cio_field_mappings (
+	$q = "CREATE TABLE {$wpdb->prefix}cio_events (
 			id 			INT PRIMARY KEY AUTO_INCREMENT,
 			form_id 	INT NOT NULL,
-			field_id    INT NOT NULL,
-			data_name   TEXT,
-			status      VARCHAR( 25 )
+			event       VARCHAR( 25 ),
+			status      VARCHAR( 25 ),
+			field_map   TEXT
 		 )";
 
 	dbDelta( $q );

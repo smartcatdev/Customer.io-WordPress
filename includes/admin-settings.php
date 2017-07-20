@@ -117,8 +117,8 @@ function do_menu_page() {
 		    'title'    => __( 'Settings', 'cio' ),
 		    'callback' => 'cio\do_settings_tab'
 	    ),
-	    'cio-mappings' => array(
-		    'title' => __( 'Form Mappings', 'cio' )
+	    'cio-events' => array(
+		    'title' => __( 'Events', 'cio' )
 	    )
     );
 

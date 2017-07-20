@@ -12,15 +12,15 @@ function enqueue_editor_scripts() {
 add_action( 'admin_enqueue_scripts', 'cio\enqueue_editor_scripts' );
 
 
-function do_form_mapping_tab( $tab ) {
+function do_form_events_tab( $tab ) {
 
-	if ( $tab === 'cio-mappings' ) {
+	if ( $tab === 'cio-events' ) {
 
-		echo '<h1 class="wp-heading-inline">' . __( 'Form Mappings', 'cio' ) . '</h1>';
-		echo '<a href="' . menu_page_url( 'cio-new-mapping', false ). '" class="page-title-action">' . __( 'Add New', 'cio' ) . '</a>';
+		echo '<h1 class="wp-heading-inline">' . __( 'Events', 'cio' ) . '</h1>';
+		echo '<a href="' . menu_page_url( 'cio-new-event', false ). '" class="page-title-action">' . __( 'Add New', 'cio' ) . '</a>';
 		echo '<hr class="wp-header-end">';
 
-		$table = new FormsTable();
+		$table = new EventsTable();
 
 		$table->prepare_items();
 		$table->display();
@@ -29,23 +29,23 @@ function do_form_mapping_tab( $tab ) {
 
 }
 
-add_action( 'cio_menu_page_tab', 'cio\do_form_mapping_tab' );
+add_action( 'cio_menu_page_tab', 'cio\do_form_events_tab' );
 
 
 function add_edit_pages() {
 
-	add_submenu_page( '', __( 'Add New Mapping', '' ), '', 'edit_posts', 'cio-new-mapping', 'cio\do_new_mapping_page' );
+	add_submenu_page( '', __( 'Add New Event', '' ), '', 'edit_posts', 'cio-new-event', 'cio\do_new_event_page' );
 
 }
 
 add_action( 'admin_menu', 'cio\add_edit_pages' );
 
 
-function do_new_mapping_page() { ?>
+function do_new_event_page() { ?>
 
 	<div class="wrap">
 
-		<h2><?php _e( 'Add New Form Mapping', 'cio' ); ?></h2>
+		<h2><?php _e( 'Add New Event', 'cio' ); ?></h2>
 
 		<form method="post" class="cio-edit-map">
 			<table class="form-table">
@@ -89,7 +89,7 @@ function do_new_mapping_page() { ?>
 				</tbody>
 			</table>
 
-			<?php if ( !empty ( $_POST['load_fields'] ) ) : ?>
+			<?php if ( !empty( $_POST['load_fields'] ) ) : ?>
 
 				<h2><?php _e( 'Map Fields', 'cio' ); ?></h2>
 				<table class="form-table">
@@ -104,12 +104,12 @@ function do_new_mapping_page() { ?>
 
 								<?php
 
-								$args = array(
-									'name'  => "fields[{$field['id']}]",
-									'class' => 'regular-text'
-								);
+                                    $args = array(
+                                        'name'  => "fields[{$field['id']}]",
+                                        'class' => 'regular-text'
+                                    );
 
-								make_text_field( $args );
+                                    make_text_field( $args );
 
 								?>
 
@@ -122,11 +122,11 @@ function do_new_mapping_page() { ?>
 
 			<?php endif; ?>
 
-			<input id="load-fields" type="hidden" name="load_fields" value="false" />
+			<input id="load-fields" type="hidden" name="load_fields" />
 
-			<?php wp_nonce_field( 'save_form_mapping', 'save_mapping_nonce' ); ?>
+			<?php wp_nonce_field( 'save_event', 'save_event_nonce' ); ?>
 
-			<?php submit_button( __( 'Save Mapping', 'cio' ) ); ?>
+			<?php submit_button( __( 'Save Event', 'cio' ) ); ?>
 
 		</form>
 
