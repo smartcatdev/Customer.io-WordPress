@@ -18,6 +18,7 @@ include_once 'constants.php';
 
 function init() {
 
+	include_once dirname( __FILE__ ) . '/includes/functions.php';
 	include_once dirname( __FILE__ ) . '/includes/admin_settings.php';
 
 }

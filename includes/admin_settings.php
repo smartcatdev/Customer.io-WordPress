@@ -19,6 +19,11 @@ function register_settings() {
 		'sanitize_callback' => 'sanitize_text_field'
 	) );
 
+	register_setting( 'cio-settings', Options::SITE_ID, array(
+		'type'              => 'string',
+		'sanitize_callback' => 'sanitize_text_field'
+	) );
+
 }
 
 add_action( 'init', 'cio\register_settings' );
@@ -36,6 +41,20 @@ add_action( 'admin_init', 'cio\add_settings_sections' );
 function add_settings_fields() {
 
 	add_settings_field(
+		Options::SITE_ID,
+		__( 'Site ID', 'cio' ),
+		'cio\do_settings_text_field',
+		'cio-settings',
+		'cio-api',
+		array(
+			'name'  => Options::SITE_ID,
+			'value' => get_option( Options::SITE_ID ),
+			'class' => 'regular-text',
+            'desc'  => __( 'Your Customer.io Site ID found under Integrations > Customer.io API > Access Keys', 'cio' )
+		)
+	);
+
+	add_settings_field(
 		Options::API_KEY,
 		__( 'API Key', 'cio' ),
 		'cio\do_settings_text_field',
@@ -44,13 +63,51 @@ function add_settings_fields() {
 		array(
 			'name'  => Options::API_KEY,
 			'value' => get_option( Options::API_KEY ),
-			'class' => 'regular-text'
+			'class' => 'regular-text',
+			'desc'  => __( 'Your Customer.io API Key found under Integrations > Customer.io API > Access Keys', 'cio' )
 		)
 	);
 
 }
 
 add_action( 'admin_init', 'cio\add_settings_fields' );
+
+
+function verify_api_keys() {
+
+    if ( isset( $_POST[ Options::API_KEY ] ) && isset( $_POST[ Options::SITE_ID ] ) ) {
+
+        $site_id = get_option( Options::SITE_ID );
+        $api_key = get_option( Options::API_KEY );
+
+        if ( $_POST[ Options::SITE_ID ] != $site_id || $_POST[ Options::API_KEY ] != $api_key ) {
+
+            $args = array(
+	            'method'  => 'PUT',
+                'headers' => array(
+                    'Authorization' => 'Basic ' . base64_encode( $_POST[ Options::SITE_ID ] . ':' . $_POST[ Options::API_KEY ] )
+                )
+            );
+
+            $res = wp_remote_request( API_ENDPOINT . 'wp-cio-verification', $args );
+
+            if ( $res['response']['code'] === 200 ) {
+
+	            add_settings_error( 'customer-io', 'api-key', __( 'Your API Key has been verified' ), 'updated' );
+
+            } else {
+
+	            add_settings_error( 'customer-io', 'api-key', __( 'Could not verify your API key' ) );
+
+            }
+
+        }
+
+    }
+
+}
+
+add_action( 'admin_init', 'cio\verify_api_keys' );
 
 
 function do_menu_page() {
@@ -107,7 +164,8 @@ function do_settings_text_field( $args ) {
 		'type'  => 'text',
 		'value' => '',
 		'class' => array(),
-		'attrs' => array()
+		'attrs' => array(),
+        'desc'  => false
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -119,6 +177,10 @@ function do_settings_text_field( $args ) {
 		echo $attr . '="' . esc_attr( is_array( $values ) ? implode( ' ', $values ) : $values ) . '" ';
 	}
 
-
 	echo '/>';
+
+	if ( $args['desc'] ) {
+	    echo '<p class="description">' . esc_html( $args['desc'] ) . '</p>';
+    }
+
 }
