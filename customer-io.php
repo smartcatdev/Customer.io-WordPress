@@ -19,6 +19,7 @@ include_once 'constants.php';
 function init() {
 
 	include_once dirname( __FILE__ ) . '/includes/functions.php';
+	include_once dirname( __FILE__ ) . '/includes/helpers.php';
 	include_once dirname( __FILE__ ) . '/includes/ListTable.php';
 	include_once dirname( __FILE__ ) . '/includes/FormsTable.php';
 	include_once dirname( __FILE__ ) . '/includes/admin-settings.php';
@@ -28,3 +29,10 @@ function init() {
 }
 
 add_action( 'plugins_loaded', 'cio\init' );
+
+
+function asset( $path = '' ) {
+
+	return trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/' ) . ltrim( $path, '/' );
+
+}

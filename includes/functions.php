@@ -45,3 +45,18 @@ function customer_event( $customer_id, $name, $data = array() ) {
 	return $res['response']['code'] === 200;
 
 }
+
+function get_forms() {
+
+	$forms   = \GFAPI::get_forms();
+	$results = array();
+
+	foreach ( $forms as $form ) {
+
+		$results[ $form['id'] ] = $form['title'];
+
+	}
+
+	return $results;
+
+}

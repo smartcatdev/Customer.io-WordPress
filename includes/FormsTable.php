@@ -9,8 +9,7 @@ class FormsTable extends ListTable {
 
 		$args = array(
 			'singular' => __( 'Form', 'cio' ),
-			'plural'   => __( 'Forms', 'cio' ),
-			'ajax'     => false
+			'plural'   => __( 'Forms', 'cio' )
 		);
 
 		parent::__construct( $args );
@@ -20,8 +19,8 @@ class FormsTable extends ListTable {
 	public function get_columns() {
 
 		$columns = array(
-			'cio_form_id'   => __( 'ID', 'cio' ),
-			'cio_form_name' => __( 'Name', 'cio' )
+			'cio_mapping_id' => __( 'Mapping', 'cio' ),
+			'cio_form_name'  => __( 'Form', 'cio' )
 		);
 
 		return $columns;
@@ -31,8 +30,8 @@ class FormsTable extends ListTable {
 	public function get_sortable_columns() {
 
 		$columns = array(
-			'cio_form_id'   => array( 'cio_form_id', false ),
-			'cio_form_name' => array( 'cio_form_name', false )
+			'cio_mapping_id' => array( 'cio_mapping_id', false ),
+			'cio_form_name'  => array( 'cio_form_name', false )
 		);
 
 		return $columns;
@@ -78,20 +77,31 @@ class FormsTable extends ListTable {
 
 	private function get_forms() {
 
-		$forms = array();
+		global $wpdb;
 
-		foreach ( \GFAPI::get_forms() as $form ) {
+		$q = "SELECT DISTINCT 
+				id AS cio_mapping_id,
+		        form_id AS cio_form_id
+		      FROM {$wpdb->prefix}cio_field_mappings";
 
-			$data = array();
+		$forms    = \GFAPI::get_forms();
+		$mappings = $wpdb->get_results( $q, ARRAY_A );
 
-			$data['cio_form_id']   = $form['id'];
-			$data['cio_form_name'] = $form['title'];
+		foreach ( $mappings as &$mapping ) {
 
-			$forms[] = $data;
+			$form = array_filter( $forms, function ( $form ) use ( $mapping ) {
+
+				return $mapping['cio_form_id'] == $form['id'];
+
+			} );
+
+			$mapping['cio_form_name'] = $form[0]['title'];
 
 		}
 
-		return $forms;
+
+
+		return $mappings;
 
 	}
 

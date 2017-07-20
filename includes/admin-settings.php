@@ -43,7 +43,7 @@ function add_settings_fields() {
 	add_settings_field(
 		Options::SITE_ID,
 		__( 'Site ID', 'cio' ),
-		'cio\do_settings_text_field',
+		'cio\make_text_field',
 		'cio-settings',
 		'cio-api',
 		array(
@@ -57,7 +57,7 @@ function add_settings_fields() {
 	add_settings_field(
 		Options::API_KEY,
 		__( 'API Key', 'cio' ),
-		'cio\do_settings_text_field',
+		'cio\make_text_field',
 		'cio-settings',
 		'cio-api',
 		array(
@@ -178,30 +178,3 @@ function do_settings_tab( $tab ) {
 
 add_action( 'cio_menu_page_tab', 'cio\do_settings_tab' );
 
-
-function do_settings_text_field( $args ) {
-
-	$defaults = array(
-		'type'  => 'text',
-		'value' => '',
-		'class' => array(),
-		'attrs' => array(),
-        'desc'  => false
-	);
-
-	$args = wp_parse_args( $args, $defaults );
-
-	echo '<input type="' . esc_attr( $args['type'] ) . '" name="' . $args['name'] . '" value="' . esc_attr( $args['value'] ) .
-	     '" class="' . esc_attr( is_array( $args['class'] ) ? implode( ' ', $args['class'] ) : $args['class'] ) . '" ';
-
-	foreach ( $args['attrs'] as $attr => $values ) {
-		echo $attr . '="' . esc_attr( is_array( $values ) ? implode( ' ', $values ) : $values ) . '" ';
-	}
-
-	echo '/>';
-
-	if ( $args['desc'] ) {
-	    echo '<p class="description">' . esc_html( $args['desc'] ) . '</p>';
-    }
-
-}

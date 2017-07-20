@@ -12,7 +12,8 @@ function create_tables() {
 			id 			INT PRIMARY KEY AUTO_INCREMENT,
 			form_id 	INT NOT NULL,
 			field_id    INT NOT NULL,
-			data_name   TEXT
+			data_name   TEXT,
+			status      VARCHAR( 25 )
 		 )";
 
 	dbDelta( $q );
