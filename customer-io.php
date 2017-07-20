@@ -19,7 +19,11 @@ include_once 'constants.php';
 function init() {
 
 	include_once dirname( __FILE__ ) . '/includes/functions.php';
-	include_once dirname( __FILE__ ) . '/includes/admin_settings.php';
+	include_once dirname( __FILE__ ) . '/includes/ListTable.php';
+	include_once dirname( __FILE__ ) . '/includes/FormsTable.php';
+	include_once dirname( __FILE__ ) . '/includes/admin-settings.php';
+	include_once dirname( __FILE__ ) . '/includes/tables.php';
+	include_once dirname( __FILE__ ) . '/includes/form-mapping.php';
 
 }
 

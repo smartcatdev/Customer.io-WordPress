@@ -112,9 +112,17 @@ add_action( 'admin_init', 'cio\verify_api_keys' );
 
 function do_menu_page() {
 
-	$tabs = apply_filters( 'cio_settings_tabs',  array(
-		'cio-settings' => __( 'Settings', 'cio' )
-	) );
+    $tabs = array(
+	    'cio-settings' => array(
+		    'title'    => __( 'Settings', 'cio' ),
+		    'callback' => 'cio\do_settings_tab'
+	    ),
+	    'cio-mappings' => array(
+		    'title' => __( 'Form Mappings', 'cio' )
+	    )
+    );
+
+	$tabs = apply_filters( 'cio_settings_tabs', $tabs );
 
 	reset( $tabs );
 
@@ -130,10 +138,10 @@ function do_menu_page() {
 
 		<h2 class="nav-tab-wrapper">
 
-			<?php foreach( $tabs as $tab => $title ) : ?>
+			<?php foreach( $tabs as $id => $tab ) : ?>
 
-				<a href="<?php echo add_query_arg( 'tab', $tab ); ?>"
-				   class="nav-tab <?php echo $active == $tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( $title ); ?></a>
+				<a href="<?php echo add_query_arg( 'tab', $id ); ?>"
+				   class="nav-tab <?php echo $active == $id ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( $tab['title'] ); ?></a>
 
 			<?php endforeach; ?>
 
@@ -141,21 +149,34 @@ function do_menu_page() {
 
 		<div class="inner">
 
-			<form method="post" action="options.php">
-
-				<?php do_settings_sections( $active ); ?>
-
-				<?php settings_fields( $active ); ?>
-
-				<?php submit_button(); ?>
-
-			</form>
+            <?php do_action( 'cio_menu_page_tab', $active ); ?>
 
 		</div>
 
 	</div>
 
 <?php }
+
+
+function do_settings_tab( $tab ) {
+
+    if ( $tab === 'cio-settings' ) : ?>
+
+        <form method="post" action="options.php">
+
+            <?php do_settings_sections( $tab ); ?>
+
+            <?php settings_fields( $tab ); ?>
+
+            <?php submit_button(); ?>
+
+        </form>
+
+    <?php endif;
+
+}
+
+add_action( 'cio_menu_page_tab', 'cio\do_settings_tab' );
 
 
 function do_settings_text_field( $args ) {
