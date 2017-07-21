@@ -71,13 +71,20 @@ function save_event() {
             'status'       => 'active',
             'id_field'     => intval( $_POST['id_field'] ),
             'field_map'    => serialize( $_POST['fields'] ),
-            'date_created' => $time,
             'date_updated' => $time
         );
 
-        $formats = array( '%d', '%s', '%s', '%d', '%s', '%s', '%s' );
+        if ( isset( $_GET['event'] ) ) {
 
-        if ( $wpdb->insert( "{$wpdb->prefix}cio_events", $data, $formats ) ) {
+            $data['id'] = intval( $_GET['event'] );
+
+        } else {
+
+            $data['date_created'] = $time;
+
+        }
+
+        if ( $wpdb->replace( "{$wpdb->prefix}cio_events", $data ) ) {
 
             add_settings_error( 'cio-events', 'save-event', __( 'Event successfully updated' ), 'updated' );
 
@@ -330,10 +337,6 @@ function do_event_edit_page() {
             </form>
 
         </div>
-
-    <?php else : ?>
-
-        <?php wp_die(); ?>
 
     <?php endif;
 
