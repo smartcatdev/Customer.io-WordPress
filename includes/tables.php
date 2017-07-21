@@ -14,6 +14,7 @@ function create_tables() {
 			event_name   VARCHAR( 25 ),
 			status       VARCHAR( 25 ),
 			id_field     INT NOT NULL,
+			email_field  INT NOT NULL,
 			field_map    TEXT,
 			date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
 			date_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP 

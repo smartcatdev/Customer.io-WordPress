@@ -222,6 +222,7 @@ function do_new_event_page() { ?>
                             <th class="col-event-prop"><?php _e( 'Property', 'cio' ); ?></th>
                             <th class="col-data-type"><?php _e( 'Type', 'cio' ); ?></th>
                             <th class="col-id-field"><?php _e( 'ID Field', 'cio' ); ?></th>
+                            <th class="col-email-field"><?php _e( 'Email Field', 'cio' ); ?></th>
                         </tr>
                     </thead>
 
@@ -270,7 +271,17 @@ function do_new_event_page() { ?>
                                            class="id-field"
                                            required
                                            value="<?php esc_attr_e( $field['id'] ); ?>">
-                                    <span class="id-field-label"><?php _e( 'ID Field', 'cio' ); ?></span>
+                                    <span class="field-label"><?php _e( 'ID Field', 'cio' ); ?></span>
+                                </label>
+                            </td>
+                            <td class="col-email-field">
+                                <label>
+                                    <input type="radio"
+                                           name="email_field"
+                                           class="email-field"
+                                           required
+                                           value="<?php esc_attr_e( $field['id'] ); ?>">
+                                    <span class="field-label"><?php _e( 'Email Field', 'cio' ); ?></span>
                                 </label>
                             </td>
 						</tr>
@@ -383,6 +394,7 @@ function do_event_edit_page() {
                                 <th class="col-event-prop"><?php _e( 'Property', 'cio' ); ?></th>
                                 <th class="col-data-type"><?php _e( 'Type', 'cio' ); ?></th>
                                 <th class="col-id-field"><?php _e( 'ID Field', 'cio' ); ?></th>
+                                <th class="col-email-field"><?php _e( 'Email Field', 'cio' ); ?></th>
                             </tr>
                         </thead>
 
@@ -441,7 +453,18 @@ function do_event_edit_page() {
                                                    required
                                                    <?php $form['id'] == $event['form_id'] ? checked( $event['id_field'], $field['id'] ) : null; ?>
                                                    value="<?php esc_attr_e( $field['id'] ); ?>">
-                                            <span class="id-field-label"><?php _e( 'ID Field', 'cio' ); ?></span>
+                                            <span class="field-label"><?php _e( 'ID Field', 'cio' ); ?></span>
+                                        </label>
+                                    </td>
+                                    <td class="col-email-field">
+                                        <label>
+                                            <input type="radio"
+                                                   name="email_field"
+                                                   class="email-field"
+                                                   required
+<?php //$form['id'] == $event['form_id'] ? checked( $event['id_field'], $field['id'] ) : null; ?>
+                                                   value="<?php esc_attr_e( $field['id'] ); ?>">
+                                            <span class="field-label"><?php _e( 'Email Field', 'cio' ); ?></span>
                                         </label>
                                     </td>
                                 </tr>
