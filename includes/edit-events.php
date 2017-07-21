@@ -62,7 +62,25 @@ function save_event() {
     if ( !isset( $_POST['load_fields'] ) && isset( $_POST['save_event_nonce'] ) &&
          wp_verify_nonce( $_POST['save_event_nonce'], 'save_event' ) ) {
 
-        // Save logic
+        $data = array(
+            'form_id'   => intval( $_POST['form_id'] ),
+            'event'     => sanitize_title( $_POST['event_name'] ),
+            'status'    => 'active',
+            'id_field'  => intval( $_POST['id_field'] ),
+            'field_map' => serialize( $_POST['fields'] )
+        );
+
+        $formats = array( '%d', '%s', '%s', '%d', '%s' );
+
+        if ( $wpdb->insert( "{$wpdb->prefix}cio_events", $data, $formats ) ) {
+
+            add_settings_error( 'cio-events', 'save-event', __( 'Event successfully updated' ), 'updated' );
+
+        } else {
+
+	        add_settings_error( 'cio-events', 'save-event', __( 'An error occurred while updating this event' ) );
+
+        }
 
     }
 
@@ -74,6 +92,8 @@ add_action( 'admin_init', 'cio\save_event' );
 function do_new_event_page() { ?>
 
 	<div class="wrap">
+
+        <?php settings_errors( 'cio-events' ); ?>
 
 		<h2><?php _e( 'Add New Event', 'cio' ); ?></h2>
 
@@ -90,7 +110,10 @@ function do_new_event_page() { ?>
 									'name'  => 'event_name',
 									'class' => 'regular-text',
 									'desc'  => __( '', 'cio' ),
-									'value' => isset( $_POST['event_name'] ) ? $_POST['event_name'] : ''
+									'value' => isset( $_POST['event_name'] ) ? $_POST['event_name'] : '',
+                                    'attrs' => array(
+                                        'required' => 'required'
+                                    )
 								);
 
 								make_text_field( $args );
@@ -108,7 +131,10 @@ function do_new_event_page() { ?>
 									'class'    => array( 'regular-text', 'gf-select' ),
 									'options'  => array( '' => __( 'Select a form', 'cio' ) ) + get_forms(),
 									'desc'     => __( '', 'cio'),
-									'selected' => isset( $_POST['form_id'] ) ? $_POST['form_id'] : ''
+									'selected' => isset( $_POST['form_id'] ) ? $_POST['form_id'] : '',
+									'attrs' => array(
+										'required' => 'required'
+									)
 								);
 
 								make_select( $args );
@@ -142,6 +168,13 @@ function do_new_event_page() { ?>
                                     make_text_field( $args );
 
 								?>
+
+                                <label>
+                                    <input type="radio"
+                                           name="id_field"
+                                           required
+                                           value="<?php esc_attr_e( $field['id'] ); ?>"><?php _e( 'ID Field', 'cio' ); ?>
+                                </label>
 
 							</td>
 						</tr>

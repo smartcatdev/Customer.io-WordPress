@@ -13,6 +13,7 @@ function create_tables() {
 			form_id 	INT NOT NULL,
 			event       VARCHAR( 25 ),
 			status      VARCHAR( 25 ),
+			id_field    INT NOT NULL,
 			field_map   TEXT
 		 )";
 

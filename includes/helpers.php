@@ -62,3 +62,34 @@ function make_select( array $args ) {
 	}
 
 }
+
+function make_checkbox( array $args ) {
+
+	$defaults = array(
+		'checked' => false,
+		'class'   => array(),
+		'attrs'   => array(),
+		'label'   => false,
+		'value'   => ''
+	);
+
+	$args = wp_parse_args( $args, $defaults );
+
+	echo '<label>';
+	echo '<input type="checkbox" ' . checked( $args['checked'], true, false ) . 'name="' . $args['name'] .
+	     '" class="' . esc_attr( is_array( $args['class'] ) ? implode( ' ', $args['class'] ) : $args['class'] ) . '" ' .
+		 ' value="' . $args['value'] . '" ';
+
+	     foreach ( $args['attrs'] as $attr => $values ) {
+		     echo $attr . '="' . esc_attr( is_array( $values ) ? implode( ' ', $args['attrs'] ) : $args['attrs'] ) . '" ';
+	     }
+
+	echo '/>';
+
+	if ( $args['label'] ) {
+		esc_html_e( $args['label'] );
+	}
+
+	echo '</label>';
+
+}
