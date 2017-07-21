@@ -67,13 +67,23 @@ function save_event() {
         if ( isset( $_POST['id_field'] ) ) {
 
 	        $time = current_time( 'mysql', 1 );
+	        $map = array();
+
+	        foreach ( $_POST['fields'] as $index => $prop ) {
+
+		        $map[ $index ] = array(
+                    'property' => $prop,
+                    'type'     => $_POST['types'][ $index ]
+                );
+
+	        }
 
 	        $data = array(
 		        'form_id'      => intval( $_POST['form_id'] ),
 		        'event_name'   => sanitize_text_field( $_POST['event_name'] ),
 		        'status'       => 'active',
 		        'id_field'     => intval( $_POST['id_field'] ),
-		        'field_map'    => serialize( $_POST['fields'] ),
+		        'field_map'    => serialize( $map ),
 		        'date_updated' => $time
 	        );
 
@@ -384,8 +394,8 @@ function do_event_edit_page() {
 
                                             $args = array(
                                                 'name'  => "fields[{$field['id']}]",
-                                                'value' => !empty( $event['field_map'][ $field['id'] ] )
-                                                                 ? $event['field_map'][ $field['id'] ]
+                                                'value' => !empty( $event['field_map'][ $field['id'] ]['property'] )
+                                                                 ? $event['field_map'][ $field['id'] ]['property']
                                                                  : '',
                                                 'class' => array( 'regular-text', 'field-name' )
                                             );
@@ -398,19 +408,24 @@ function do_event_edit_page() {
                                     <td class="col-data-type">
                                         <label>
                                             <strong class="label"><?php _e( 'Type', 'cio' ); ?></strong>
-			                                <?php
 
-			                                $args = array(
-				                                'name' => "types[{$field['id']}]",
-				                                'options' => array(
-					                                'customer' => __( 'Customer', 'cio' ),
-					                                'event'    => __( 'Event', 'cio' )
-				                                )
-			                                );
+                                            <?php
 
-			                                make_select( $args );
+                                                $args = array(
+                                                    'name'     => "types[{$field['id']}]",
+                                                    'options'  => array(
+                                                        'customer' => __( 'Customer', 'cio' ),
+                                                        'event'    => __( 'Event', 'cio' )
+                                                    ),
+                                                    'selected' => !empty( $event['field_map'][ $field['id'] ]['type'] )
+                                                                        ? $event['field_map'][ $field['id'] ]['type']
+	                                                                    : '',
+                                                );
+
+                                                make_select( $args );
 
 			                                ?>
+
                                         </label>
                                     </td>
                                     <td class="col-id-field">
