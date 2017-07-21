@@ -6,6 +6,7 @@ namespace cio;
 function enqueue_editor_scripts() {
 
 	wp_enqueue_script( 'cio-editor-js', asset( 'admin/js/editor.js' ), array( 'jquery' ), VERSION );
+	wp_enqueue_style( 'cio-editor-css', asset( 'admin/css/editor.css' ), null, VERSION );
 
 }
 
@@ -148,6 +149,7 @@ function do_new_event_page() { ?>
 
 		<form method="post" class="cio-edit-map">
 			<table class="form-table">
+
 				<tbody>
 
 					<tr class="regular-text">
@@ -197,7 +199,15 @@ function do_new_event_page() { ?>
 			<?php if ( isset( $_POST['load_fields'] ) && !empty( $_POST['form_id'] ) ) : ?>
 
 				<h2><?php _e( 'Map Fields', 'cio' ); ?></h2>
-				<table class="form-table">
+				<table class="form-table field-map-table">
+
+                    <thead>
+                        <tr>
+                            <th><?php _e( 'Field Name', 'cio' ); ?></th>
+                            <th><?php _e( 'Customer.io Event Property', 'cio' ); ?></th>
+                            <th><?php _e( 'ID Field', 'cio' ); ?></th>
+                        </tr>
+                    </thead>
 
 					<?php $form = \GFAPI::get_form( $_POST['form_id'] ); ?>
 
@@ -218,15 +228,17 @@ function do_new_event_page() { ?>
 
 								?>
 
+							</td>
+                            <td>
                                 <label>
                                     <input type="radio"
                                            name="id_field"
                                            class="id-field"
                                            required
-                                           value="<?php esc_attr_e( $field['id'] ); ?>"><?php _e( 'ID Field', 'cio' ); ?>
+                                           value="<?php esc_attr_e( $field['id'] ); ?>">
+                                    <span class="id-field-label"><?php _e( 'ID Field', 'cio' ); ?></span>
                                 </label>
-
-							</td>
+                            </td>
 						</tr>
 
 					<?php endforeach; ?>
@@ -263,50 +275,51 @@ function do_event_edit_page() {
 
             <form method="post" class="cio-edit-map">
                 <table class="form-table">
+
                     <tbody>
+                        <tr class="regular-text">
+                            <th scope="row"><?php _e( 'Event', 'cio' ); ?></th>
+                            <td>
+                                <?php
 
-                    <tr class="regular-text">
-                        <th scope="row"><?php _e( 'Event', 'cio' ); ?></th>
-                        <td>
-                            <?php
+                                    $args = array(
+                                        'name'  => 'event_name',
+                                        'class' => 'regular-text',
+                                        'desc'  => __( '', 'cio' ),
+                                        'value' => $event['event_name'],
+                                        'attrs' => array(
+                                            'required' => 'required'
+                                        )
+                                    );
 
-                                $args = array(
-                                    'name'  => 'event_name',
-                                    'class' => 'regular-text',
-                                    'desc'  => __( '', 'cio' ),
-                                    'value' => $event['event_name'],
-                                    'attrs' => array(
-                                        'required' => 'required'
-                                    )
-                                );
+                                    make_text_field( $args );
 
-                                make_text_field( $args );
+                                ?>
+                            </td>
+                        </tr>
+                        <tr class="regular-text">
+                            <th scope="row"><?php _e( 'Gravity Form', 'cio' ); ?></th>
+                            <td>
+                                <?php
 
-                            ?>
-                        </td>
-                    </tr>
-                    <tr class="regular-text">
-                        <th scope="row"><?php _e( 'Gravity Form', 'cio' ); ?></th>
-                        <td>
-                            <?php
+                                    $args = array(
+                                        'name'     => 'form_id',
+                                        'class'    => array( 'regular-text', 'gf-select' ),
+                                        'options'  => get_forms(),
+                                        'desc'     => __( '', 'cio'),
+                                        'selected' => isset( $_POST['form_id'] ) ? $_POST['form_id'] : $event['form_id'],
+                                        'attrs' => array(
+                                            'required' => 'required'
+                                        )
+                                    );
 
-                                $args = array(
-                                    'name'     => 'form_id',
-                                    'class'    => array( 'regular-text', 'gf-select' ),
-                                    'options'  => get_forms(),
-                                    'desc'     => __( '', 'cio'),
-                                    'selected' => isset( $_POST['form_id'] ) ? $_POST['form_id'] : $event['form_id'],
-                                    'attrs' => array(
-                                        'required' => 'required'
-                                    )
-                                );
+                                    make_select( $args );
 
-                                make_select( $args );
-
-                            ?>
-                        </td>
-                    </tr>
+                                ?>
+                            </td>
+                        </tr>
                     </tbody>
+
                 </table>
 
                 <?php
@@ -328,41 +341,53 @@ function do_event_edit_page() {
                 <?php if ( $load_fields_for ) : ?>
 
                     <h2><?php _e( 'Map Fields', 'cio' ); ?></h2>
-                    <table class="form-table">
+                    <table class="form-table field-map-table">
+
+                        <thead>
+                            <tr>
+                                <th><?php _e( 'Field Name', 'cio' ); ?></th>
+                                <th><?php _e( 'Customer.io Event Property', 'cio' ); ?></th>
+                                <th><?php _e( 'ID Field', 'cio' ); ?></th>
+                            </tr>
+                        </thead>
 
                         <?php $form = \GFAPI::get_form( $load_fields_for ); ?>
 
                         <?php foreach ( $form['fields'] as $field ) : ?>
 
-                            <tr class="regular-text">
-                                <th scope="row"><?php esc_html_e( $field['label'] ); ?></th>
-                                <td>
+                            <tbody>
+                                <tr class="regular-text">
+                                    <th scope="row"><?php esc_html_e( $field['label'] ); ?></th>
+                                    <td>
 
-                                    <?php
+                                        <?php
 
-                                        $args = array(
-                                            'name'  => "fields[{$field['id']}]",
-                                            'value' => !empty( $event['field_map'][ $field['id'] ] )
-                                                             ? $event['field_map'][ $field['id'] ]
-                                                             : '',
-                                            'class' => array( 'regular-text', 'field-name' )
-                                        );
+                                            $args = array(
+                                                'name'  => "fields[{$field['id']}]",
+                                                'value' => !empty( $event['field_map'][ $field['id'] ] )
+                                                                 ? $event['field_map'][ $field['id'] ]
+                                                                 : '',
+                                                'class' => array( 'regular-text', 'field-name' )
+                                            );
 
-                                        make_text_field( $args );
+                                            make_text_field( $args );
 
-                                    ?>
+                                        ?>
 
-                                    <label>
-                                        <input type="radio"
-                                               name="id_field"
-                                               class="id-field"
-                                               required
-                                               <?php $form['id'] == $event['form_id'] ? checked( $event['id_field'], $field['id'] ) : null; ?>
-                                               value="<?php esc_attr_e( $field['id'] ); ?>"><?php _e( 'ID Field', 'cio' ); ?>
-                                    </label>
-
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td>
+                                        <label>
+                                            <input type="radio"
+                                                   name="id_field"
+                                                   class="id-field"
+                                                   required
+                                                   <?php $form['id'] == $event['form_id'] ? checked( $event['id_field'], $field['id'] ) : null; ?>
+                                                   value="<?php esc_attr_e( $field['id'] ); ?>">
+                                            <span class="id-field-label"><?php _e( 'ID Field', 'cio' ); ?></span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            </tbody>
 
                         <?php endforeach; ?>
 

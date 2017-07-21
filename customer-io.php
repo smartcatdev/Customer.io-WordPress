@@ -25,6 +25,7 @@ function init() {
 	include_once dirname( __FILE__ ) . '/includes/admin-settings.php';
 	include_once dirname( __FILE__ ) . '/includes/tables.php';
 	include_once dirname( __FILE__ ) . '/includes/manage-events.php';
+	include_once dirname( __FILE__ ) . '/includes/gravity-forms.php';
 
 }
 

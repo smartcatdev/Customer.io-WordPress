@@ -61,21 +61,35 @@ function get_forms() {
 
 }
 
-function get_events( array $args ) {
+function get_events( array $args = array() ) {
 
 	global $wpdb;
 
 	$defaults = array(
-
+		'id'   => false,
+		'form' => false
 	);
 
 	$args = wp_parse_args( $args, $defaults );
 
-	$q = "SELECT * 
-		  FROM {$wpdb->prefix}cio_events 
-		  WHERE id = %s ";
+	$q = "SELECT * FROM {$wpdb->prefix}cio_events WHERE true = true ";
+	$v = array();
 
-	$results = $wpdb->get_results( $wpdb->prepare( $q, array( $args['id'] ) ), ARRAY_A );
+	if ( $args['id'] ) {
+
+		$q  .= " AND id = %d ";
+		$v[] = $args['id'];
+	}
+
+	if ( $args['form'] ) {
+
+		$q  .= " AND form_id = %d ";
+		$v[] = $args['form'];
+
+	}
+
+
+	$results = $wpdb->get_results( $wpdb->prepare( $q, $v ), ARRAY_A );
 
 
 	if ( !empty( $results ) ) {

@@ -1,0 +1,44 @@
+
+.field-map-table thead {
+    display: none;
+}
+
+@media( min-width: 783px ) {
+
+
+    .field-map-table thead th:nth-child(1),
+    .field-map-table th[scope="row"] {
+        width: 60px;
+    }
+
+    .field-map-table thead th:nth-child(2),
+    .field-map-table tbody tr td:first-of-type {
+        max-width: 100px;
+    }
+
+
+    .field-map-table thead th:nth-child(3) {
+        padding-left: 10px !important;
+    }
+
+    .field-map-table input[type="radio"] {
+        margin-left: 15px !important;
+    }
+
+    .field-map-table tbody tr td:first-of-type {
+        padding-left: 0;
+    }
+
+    .field-map-table input[type="text"] {
+        width: 100%;
+    }
+
+    .field-map-table .id-field-label {
+        display: none;
+    }
+
+    .field-map-table thead {
+        display: table-header-group;
+    }
+
+}
