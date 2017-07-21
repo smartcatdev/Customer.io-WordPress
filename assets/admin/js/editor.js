@@ -2,7 +2,7 @@ jQuery( document ).ready( function ( $ ) {
 
     $( '.gf-select' ).change( function () {
 
-        $( '#load-fields' ).val( $( this ).val().length > 0 ? 1 : 0);
+        $( 'form.cio-edit-map' ).append( '<input type="hidden" name="load_fields" />' );
         $( '#submit' ).trigger( 'click' );
 
     } );

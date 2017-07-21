@@ -12,6 +12,20 @@ function enqueue_editor_scripts() {
 add_action( 'admin_enqueue_scripts', 'cio\enqueue_editor_scripts' );
 
 
+function set_active_menu_item() {
+
+    global $parent_file, $submenu_file;
+
+    if ( isset( $_GET['page'] ) && strpos( $_GET['page'], 'cio' ) !== false ) {
+
+
+    }
+
+}
+
+add_filter( 'admin_head', 'cio\set_active_menu_item' );
+
+
 function do_form_events_tab( $tab ) {
 
 	if ( $tab === 'cio-events' ) {
@@ -39,6 +53,22 @@ function add_edit_pages() {
 }
 
 add_action( 'admin_menu', 'cio\add_edit_pages' );
+
+
+function save_event() {
+
+    global $wpdb;
+
+    if ( !isset( $_POST['load_fields'] ) && isset( $_POST['save_event_nonce'] ) &&
+         wp_verify_nonce( $_POST['save_event_nonce'], 'save_event' ) ) {
+
+        // Save logic
+
+    }
+
+}
+
+add_action( 'admin_init', 'cio\save_event' );
 
 
 function do_new_event_page() { ?>
@@ -89,7 +119,7 @@ function do_new_event_page() { ?>
 				</tbody>
 			</table>
 
-			<?php if ( !empty( $_POST['load_fields'] ) ) : ?>
+			<?php if ( isset( $_POST['load_fields'] ) && !empty( $_POST['form_id'] ) ) : ?>
 
 				<h2><?php _e( 'Map Fields', 'cio' ); ?></h2>
 				<table class="form-table">
@@ -122,10 +152,7 @@ function do_new_event_page() { ?>
 
 			<?php endif; ?>
 
-			<input id="load-fields" type="hidden" name="load_fields" />
-
 			<?php wp_nonce_field( 'save_event', 'save_event_nonce' ); ?>
-
 			<?php submit_button( __( 'Save Event', 'cio' ) ); ?>
 
 		</form>
@@ -133,3 +160,4 @@ function do_new_event_page() { ?>
 	</div>
 
 <?php }
+
