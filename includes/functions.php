@@ -5,10 +5,10 @@ namespace cio;
 
 function update_customer( $id, $data = array() ) {
 
-	$url = ltrim(API_ENDPOINT . $id, '/' );
+	$url = ltrim(API_ENDPOINT . urlencode( $id ), '/' );
 
 	$site_id = get_option( Options::SITE_ID );
-	$api_key = get_option( Options::SITE_ID );
+	$api_key = get_option( Options::API_KEY );
 
 	$args = array(
 		'method'  => 'PUT',
@@ -27,18 +27,24 @@ function update_customer( $id, $data = array() ) {
 
 function customer_event( $customer_id, $name, $data = array() ) {
 
-	$url = trailingslashit( API_ENDPOINT . $customer_id ) . trim( $name, '/' );
+	$url = trim( API_ENDPOINT . urlencode( $customer_id ), '/' ) . '/events';
 
 	$site_id = get_option( Options::SITE_ID );
-	$api_key = get_option( Options::SITE_ID );
+	$api_key = get_option( Options::API_KEY );
+
+	$body = array(
+		'name' => $name,
+		'data' => $data
+	);
 
 	$args = array(
 		'method'  => 'POST',
-		'body'    => $data,
+		'body'    => $body,
 		'headers' => array(
 			'Authorization' => 'Basic ' . base64_encode( "$site_id:$api_key" )
 		)
 	);
+
 
 	$res = wp_remote_request( $url, $args );
 

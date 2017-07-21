@@ -69,12 +69,17 @@ function save_event() {
 	        $time = current_time( 'mysql', 1 );
 	        $map = array();
 
+	        // Group mapped fields with properties and types
 	        foreach ( $_POST['fields'] as $index => $prop ) {
 
-		        $map[ $index ] = array(
-                    'property' => $prop,
-                    'type'     => $_POST['types'][ $index ]
-                );
+	            if ( !empty( $prop ) ) {
+
+		            $map[ $index ] = array(
+			            'property' => $prop,
+			            'type'     => $_POST['types'][ $index ]
+		            );
+
+                }
 
 	        }
 
