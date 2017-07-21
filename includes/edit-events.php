@@ -48,7 +48,8 @@ add_action( 'cio_menu_page_tab', 'cio\do_form_events_tab' );
 
 function add_edit_pages() {
 
-	add_submenu_page( '', __( 'Add New Event', '' ), '', 'edit_posts', 'cio-new-event', 'cio\do_new_event_page' );
+	add_submenu_page( '', __( 'Add New Event', 'cio' ), '', 'edit_posts', 'cio-new-event', 'cio\do_new_event_page' );
+	add_submenu_page( '', __( 'Edit Event', 'cio' ), '', 'edit_posts', 'cio-edit-event', 'cio\do_edit_event_page' );
 
 }
 
@@ -62,15 +63,19 @@ function save_event() {
     if ( !isset( $_POST['load_fields'] ) && isset( $_POST['save_event_nonce'] ) &&
          wp_verify_nonce( $_POST['save_event_nonce'], 'save_event' ) ) {
 
+        $time = current_time( 'mysql', 1 );
+
         $data = array(
-            'form_id'   => intval( $_POST['form_id'] ),
-            'event'     => sanitize_title( $_POST['event_name'] ),
-            'status'    => 'active',
-            'id_field'  => intval( $_POST['id_field'] ),
-            'field_map' => serialize( $_POST['fields'] )
+            'form_id'      => intval( $_POST['form_id'] ),
+            'event_name'   => sanitize_title( $_POST['event_name'] ),
+            'status'       => 'active',
+            'id_field'     => intval( $_POST['id_field'] ),
+            'field_map'    => serialize( $_POST['fields'] ),
+            'date_created' => $time,
+            'date_updated' => $time
         );
 
-        $formats = array( '%d', '%s', '%s', '%d', '%s' );
+        $formats = array( '%d', '%s', '%s', '%d', '%s', '%s', '%s' );
 
         if ( $wpdb->insert( "{$wpdb->prefix}cio_events", $data, $formats ) ) {
 

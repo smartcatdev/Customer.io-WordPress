@@ -19,8 +19,9 @@ class EventsTable extends ListTable {
 	public function get_columns() {
 
 		$columns = array(
-			'cio_event'      => __( 'Event', 'cio' ),
-			'cio_form_name'  => __( 'Form', 'cio' )
+			'event_name'   => __( 'Event', 'cio' ),
+			'form_name'    => __( 'Form', 'cio' ),
+			'date_created' => __( 'Date', 'cio' )
 		);
 
 		return $columns;
@@ -30,8 +31,9 @@ class EventsTable extends ListTable {
 	public function get_sortable_columns() {
 
 		$columns = array(
-			'cio_event'      => array( 'cio_event', false ),
-			'cio_form_name'  => array( 'cio_form_name', false )
+			'event_name'   => array( 'event_name', false ),
+			'form_name'    => array( 'form_name', false ),
+			'date_created' => array( 'date_created', false )
 		);
 
 		return $columns;
@@ -50,12 +52,30 @@ class EventsTable extends ListTable {
 
 	}
 
+	public function column_date_created( $item ) {
+
+		echo date_i18n( 'Y/m/d', strtotime( $item['date_created'] ) );
+
+	}
+
+	public function column_event_name( $item ) { ?>
+
+		<strong>
+			<a class="row-title" href="#"><?php esc_html_e( $item['form_name'] ); ?></a>
+		</strong>
+		<div class="row-actions">
+			<span class="edit"><a href="#"><?php _e( 'Edit', 'cio' ); ?></a></span> |
+			<span class="trash"><a class="submitdelete" href="#"><?php _e( 'Delete', 'cio' ); ?></a></span>
+		</div>
+
+	<?php }
+
 	public function prepare_items() {
 
 		$this->_column_headers = array( $this->get_columns(), array(), $this->get_sortable_columns() );
 
 		$per_page = 20;
-		$data = $this->get_forms();
+		$data = $this->get_events();
 		$current_page = $this->get_pagenum();
 
 		$this->set_pagination_args( array(
@@ -75,14 +95,11 @@ class EventsTable extends ListTable {
 
 	}
 
-	private function get_forms() {
+	private function get_events() {
 
 		global $wpdb;
 
-		$q = "SELECT DISTINCT 
-				form
-				event AS cio_event,
-		      FROM {$wpdb->prefix}cio_events";
+		$q = "SELECT * FROM {$wpdb->prefix}cio_events";
 
 		$forms  = \GFAPI::get_forms();
 		$events = $wpdb->get_results( $q, ARRAY_A );
@@ -95,11 +112,9 @@ class EventsTable extends ListTable {
 
 			} );
 
-			$event['cio_form_name'] = $form[0]['title'];
+			$event['form_name'] = $form[0]['title'];
 
 		}
-
-
 
 		return $events;
 
