@@ -203,9 +203,10 @@ function do_new_event_page() { ?>
 
                     <thead>
                         <tr>
-                            <th><?php _e( 'Field Name', 'cio' ); ?></th>
-                            <th><?php _e( 'Customer.io Event Property', 'cio' ); ?></th>
-                            <th><?php _e( 'ID Field', 'cio' ); ?></th>
+                            <th class="col-field-name"><?php _e( 'Field Name', 'cio' ); ?></th>
+                            <th class="col-event-prop"><?php _e( 'Property', 'cio' ); ?></th>
+                            <th class="col-data-type"><?php _e( 'Type', 'cio' ); ?></th>
+                            <th class="col-id-field"><?php _e( 'ID Field', 'cio' ); ?></th>
                         </tr>
                     </thead>
 
@@ -214,8 +215,8 @@ function do_new_event_page() { ?>
 					<?php foreach ( $form['fields'] as $field ) : ?>
 
 						<tr class="regular-text">
-							<th scope="row"><?php esc_html_e( $field['label'] ); ?></th>
-							<td>
+							<th class="col-field-name" scope="row"><?php esc_html_e( $field['label'] ); ?></th>
+							<td class="col-event-prop">
 
 								<?php
 
@@ -229,7 +230,25 @@ function do_new_event_page() { ?>
 								?>
 
 							</td>
-                            <td>
+                            <td class="col-data-type">
+                                <label>
+                                    <strong class="label"><?php _e( 'Type', 'cio' ); ?></strong>
+                                        <?php
+
+                                            $args = array(
+                                                'name' => "types[{$field['id']}]",
+                                                'options' => array(
+                                                    'customer' => __( 'Customer', 'cio' ),
+                                                    'event'    => __( 'Event', 'cio' )
+                                                )
+                                            );
+
+                                            make_select( $args );
+
+                                        ?>
+                                </label>
+                            </td>
+                            <td class="col-id-field">
                                 <label>
                                     <input type="radio"
                                            name="id_field"
@@ -345,9 +364,10 @@ function do_event_edit_page() {
 
                         <thead>
                             <tr>
-                                <th><?php _e( 'Field Name', 'cio' ); ?></th>
-                                <th><?php _e( 'Customer.io Event Property', 'cio' ); ?></th>
-                                <th><?php _e( 'ID Field', 'cio' ); ?></th>
+                                <th class="col-field-name"><?php _e( 'Field Name', 'cio' ); ?></th>
+                                <th class="col-event-prop"><?php _e( 'Property', 'cio' ); ?></th>
+                                <th class="col-data-type"><?php _e( 'Type', 'cio' ); ?></th>
+                                <th class="col-id-field"><?php _e( 'ID Field', 'cio' ); ?></th>
                             </tr>
                         </thead>
 
@@ -357,8 +377,8 @@ function do_event_edit_page() {
 
                             <tbody>
                                 <tr class="regular-text">
-                                    <th scope="row"><?php esc_html_e( $field['label'] ); ?></th>
-                                    <td>
+                                    <th class="col-field-name" scope="row"><?php esc_html_e( $field['label'] ); ?></th>
+                                    <td class="col-event-prop">
 
                                         <?php
 
@@ -375,7 +395,25 @@ function do_event_edit_page() {
                                         ?>
 
                                     </td>
-                                    <td>
+                                    <td class="col-data-type">
+                                        <label>
+                                            <strong class="label"><?php _e( 'Type', 'cio' ); ?></strong>
+			                                <?php
+
+			                                $args = array(
+				                                'name' => "types[{$field['id']}]",
+				                                'options' => array(
+					                                'customer' => __( 'Customer', 'cio' ),
+					                                'event'    => __( 'Event', 'cio' )
+				                                )
+			                                );
+
+			                                make_select( $args );
+
+			                                ?>
+                                        </label>
+                                    </td>
+                                    <td class="col-id-field">
                                         <label>
                                             <input type="radio"
                                                    name="id_field"

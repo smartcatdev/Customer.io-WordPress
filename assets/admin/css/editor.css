@@ -5,31 +5,30 @@
 
 @media( min-width: 783px ) {
 
-
-    .field-map-table thead th:nth-child(1),
-    .field-map-table th[scope="row"] {
-        width: 60px;
-    }
-
-    .field-map-table thead th:nth-child(2),
-    .field-map-table tbody tr td:first-of-type {
+    .field-map-table .col-event-prop {
         max-width: 100px;
     }
 
-
-    .field-map-table thead th:nth-child(3) {
-        padding-left: 10px !important;
+    .field-map-table .col-id-field,
+    .field-map-table .col-field-name,
+    .field-map-table .col-id-field,
+    .field-map-table .col-data-type {
+        width: 60px;
     }
 
-    .field-map-table input[type="radio"] {
-        margin-left: 15px !important;
-    }
-
-    .field-map-table tbody tr td:first-of-type {
+    .field-map-table td.col-data-type,
+    .field-map-table td.col-event-prop {
+        padding-right: 15px !important;
         padding-left: 0;
     }
 
-    .field-map-table input[type="text"] {
+    .field-map-table th.col-data-type,
+    .field-map-table th.col-event-prop {
+        padding-right: 15px !important;
+    }
+
+    .field-map-table input[type="text"],
+    .field-map-table select {
         width: 100%;
     }
 
@@ -39,6 +38,10 @@
 
     .field-map-table thead {
         display: table-header-group;
+    }
+    
+    .field-map-table .col-data-type .label {
+        display: none;
     }
 
 }
