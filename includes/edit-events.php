@@ -63,38 +63,48 @@ function save_event() {
     if ( !isset( $_POST['load_fields'] ) && isset( $_POST['save_event_nonce'] ) &&
          wp_verify_nonce( $_POST['save_event_nonce'], 'save_event' ) ) {
 
-        $time = current_time( 'mysql', 1 );
+        if ( isset( $_POST['id_field'] ) ) {
 
-        $data = array(
-            'form_id'      => intval( $_POST['form_id'] ),
-            'event_name'   => sanitize_title( $_POST['event_name'] ),
-            'status'       => 'active',
-            'id_field'     => intval( $_POST['id_field'] ),
-            'field_map'    => serialize( $_POST['fields'] ),
-            'date_updated' => $time
-        );
+	        $time = current_time( 'mysql', 1 );
 
-        if ( isset( $_GET['event'] ) ) {
+	        $data = array(
+		        'form_id'      => intval( $_POST['form_id'] ),
+		        'event_name'   => sanitize_title( $_POST['event_name'] ),
+		        'status'       => 'active',
+		        'id_field'     => intval( $_POST['id_field'] ),
+		        'field_map'    => serialize( $_POST['fields'] ),
+		        'date_updated' => $time
+	        );
 
-            $data['id'] = intval( $_GET['event'] );
+	        if ( isset( $_GET['event'] ) ) {
+
+		        $data['id'] = intval( $_GET['event'] );
+
+	        } else {
+
+		        $data['date_created'] = $time;
+
+	        }
+
+	        if ( $wpdb->replace( "{$wpdb->prefix}cio_events", $data ) ) {
+
+		        add_settings_error( 'cio-events', 'save-event', __( 'Event successfully updated' ), 'updated' );
+		        wp_redirect( '?page=cio-edit-event&event=' . $wpdb->insert_id );
+
+	        } else {
+
+		        add_settings_error( 'cio-events', 'save-event', __( 'An error occurred while saving this event' ) );
+
+	        }
 
         } else {
 
-            $data['date_created'] = $time;
-
-        }
-
-        if ( $wpdb->replace( "{$wpdb->prefix}cio_events", $data ) ) {
-
-            add_settings_error( 'cio-events', 'save-event', __( 'Event successfully updated' ), 'updated' );
-
-        } else {
-
-	        add_settings_error( 'cio-events', 'save-event', __( 'An error occurred while updating this event' ) );
+	        add_settings_error( 'cio-events', 'save-event', __( 'Error saving this event. An ID Field is required' ) );
 
         }
 
     }
+
 
 }
 
@@ -174,7 +184,7 @@ function do_new_event_page() { ?>
 
                                     $args = array(
                                         'name'  => "fields[{$field['id']}]",
-                                        'class' => 'regular-text'
+                                        'class' => array( 'regular-text', 'field-name' )
                                     );
 
                                     make_text_field( $args );
@@ -184,6 +194,7 @@ function do_new_event_page() { ?>
                                 <label>
                                     <input type="radio"
                                            name="id_field"
+                                           class="id-field"
                                            required
                                            value="<?php esc_attr_e( $field['id'] ); ?>"><?php _e( 'ID Field', 'cio' ); ?>
                                 </label>
@@ -307,7 +318,7 @@ function do_event_edit_page() {
                                             'value' => !empty( $event['field_map'][ $field['id'] ] )
                                                              ? $event['field_map'][ $field['id'] ]
                                                              : '',
-                                            'class' => 'regular-text'
+                                            'class' => array( 'regular-text', 'field-name' )
                                         );
 
                                         make_text_field( $args );
@@ -317,6 +328,7 @@ function do_event_edit_page() {
                                     <label>
                                         <input type="radio"
                                                name="id_field"
+                                               class="id-field"
                                                required
                                                <?php $form['id'] == $event['form_id'] ? checked( $event['id_field'], $field['id'] ) : null; ?>
                                                value="<?php esc_attr_e( $field['id'] ); ?>"><?php _e( 'ID Field', 'cio' ); ?>
