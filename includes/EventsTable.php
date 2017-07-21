@@ -60,12 +60,18 @@ class EventsTable extends ListTable {
 
 	public function column_event_name( $item ) { ?>
 
+		<?php $edit_url =  menu_page_url( 'cio-edit-event', false ) . '&event=' . $item['id']; ?>
+
 		<strong>
-			<a class="row-title" href="#"><?php esc_html_e( $item['form_name'] ); ?></a>
+			<a class="row-title" href="<?php echo esc_url( $edit_url ); ?>"><?php esc_html_e( $item['form_name'] ); ?></a>
 		</strong>
 		<div class="row-actions">
-			<span class="edit"><a href="#"><?php _e( 'Edit', 'cio' ); ?></a></span> |
-			<span class="trash"><a class="submitdelete" href="#"><?php _e( 'Delete', 'cio' ); ?></a></span>
+			<span class="edit">
+				<a href="<?php echo esc_url( $edit_url ); ?>"><?php _e( 'Edit', 'cio' ); ?></a>
+			</span> |
+			<span class="trash">
+				<a class="submitdelete" href="#"><?php _e( 'Delete', 'cio' ); ?></a>
+			</span>
 		</div>
 
 	<?php }

@@ -60,3 +60,37 @@ function get_forms() {
 	return $results;
 
 }
+
+function get_events( array $args ) {
+
+	global $wpdb;
+
+	$defaults = array(
+
+	);
+
+	$args = wp_parse_args( $args, $defaults );
+
+	$q = "SELECT * 
+		  FROM {$wpdb->prefix}cio_events 
+		  WHERE id = %s ";
+
+	$results = $wpdb->get_results( $wpdb->prepare( $q, array( $args['id'] ) ), ARRAY_A );
+
+
+	if ( !empty( $results ) ) {
+
+		foreach ( $results as &$event ) {
+
+			$event['field_map'] = unserialize( $event['field_map'] );
+
+		}
+
+		return $results;
+
+	}
+
+
+	return false;
+
+}
