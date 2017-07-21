@@ -69,7 +69,7 @@ function save_event() {
 
 	        $data = array(
 		        'form_id'      => intval( $_POST['form_id'] ),
-		        'event_name'   => sanitize_title( $_POST['event_name'] ),
+		        'event_name'   => sanitize_text_field( $_POST['event_name'] ),
 		        'status'       => 'active',
 		        'id_field'     => intval( $_POST['id_field'] ),
 		        'field_map'    => serialize( $_POST['fields'] ),
@@ -88,7 +88,6 @@ function save_event() {
 
 	        if ( $wpdb->replace( "{$wpdb->prefix}cio_events", $data ) ) {
 
-		        add_settings_error( 'cio-events', 'save-event', __( 'Event successfully updated' ), 'updated' );
 		        wp_redirect( '?page=cio-edit-event&event=' . $wpdb->insert_id );
 
 	        } else {
@@ -109,6 +108,34 @@ function save_event() {
 }
 
 add_action( 'admin_init', 'cio\save_event' );
+
+
+function delete_event() {
+
+    global $wpdb;
+
+    if ( isset( $_GET['cio_delete_nonce'] ) &&
+         isset( $_GET['action'] ) && $_GET['action'] === 'trash' &&
+         wp_verify_nonce( $_GET['cio_delete_nonce'], 'delete_event' ) ) {
+
+        $q = "DELETE 
+              FROM {$wpdb->prefix}cio_events
+              WHERE id = %d ";
+
+        $q = $wpdb->prepare( $q, array( $_GET['event'] )  );
+
+        if ( $wpdb->query( $q ) ) {
+
+            add_settings_error( 'customer-io', 'event-deleted', __( 'Event was successfully deleted' ), 'updated' );
+	        wp_safe_redirect( remove_query_arg( array( 'action', 'event', 'cio_delete_nonce' ) ) );
+
+        }
+
+    }
+
+}
+
+add_action( 'admin_init', 'cio\delete_event' );
 
 
 function do_new_event_page() { ?>

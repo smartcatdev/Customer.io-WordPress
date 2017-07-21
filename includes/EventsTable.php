@@ -63,14 +63,25 @@ class EventsTable extends ListTable {
 		<?php $edit_url =  menu_page_url( 'cio-edit-event', false ) . '&event=' . $item['id']; ?>
 
 		<strong>
-			<a class="row-title" href="<?php echo esc_url( $edit_url ); ?>"><?php esc_html_e( $item['form_name'] ); ?></a>
+			<a class="row-title" href="<?php echo esc_url( $edit_url ); ?>"><?php esc_html_e( $item['event_name'] ); ?></a>
 		</strong>
 		<div class="row-actions">
 			<span class="edit">
 				<a href="<?php echo esc_url( $edit_url ); ?>"><?php _e( 'Edit', 'cio' ); ?></a>
 			</span> |
 			<span class="trash">
-				<a class="submitdelete" href="#"><?php _e( 'Delete', 'cio' ); ?></a>
+
+                <?php
+
+                    $args = array(
+                        'action'           => 'trash',
+                        'event'            => $item['id'],
+                        'cio_delete_nonce' => wp_create_nonce( 'delete_event' )
+                    );
+
+                ?>
+
+				<a class="submitdelete" href="<?php echo add_query_arg( $args ); ?>"><?php _e( 'Delete', 'cio' ); ?></a>
 			</span>
 		</div>
 

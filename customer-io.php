@@ -24,7 +24,7 @@ function init() {
 	include_once dirname( __FILE__ ) . '/includes/EventsTable.php';
 	include_once dirname( __FILE__ ) . '/includes/admin-settings.php';
 	include_once dirname( __FILE__ ) . '/includes/tables.php';
-	include_once dirname( __FILE__ ) . '/includes/edit-events.php';
+	include_once dirname( __FILE__ ) . '/includes/manage-events.php';
 
 }
 
