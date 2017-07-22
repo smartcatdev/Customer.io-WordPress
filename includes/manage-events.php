@@ -2,6 +2,8 @@
 
 namespace cio;
 
+// TODO disable email and ID forms when selected
+
 
 function enqueue_editor_scripts() {
 
@@ -64,7 +66,7 @@ function save_event() {
     if ( !isset( $_POST['load_fields'] ) && isset( $_POST['save_event_nonce'] ) &&
          wp_verify_nonce( $_POST['save_event_nonce'], 'save_event' ) ) {
 
-        if ( isset( $_POST['id_field'] ) ) {
+        if ( isset( $_POST['id_field'] ) && isset( $_POST['email_field'] ) ) {
 
 	        $time = current_time( 'mysql', 1 );
 	        $map = array();
@@ -88,6 +90,7 @@ function save_event() {
 		        'event_name'   => sanitize_text_field( $_POST['event_name'] ),
 		        'status'       => 'active',
 		        'id_field'     => intval( $_POST['id_field'] ),
+		        'email_field'  => intval( $_POST['email_field'] ),
 		        'field_map'    => serialize( $map ),
 		        'date_updated' => $time
 	        );
@@ -114,7 +117,7 @@ function save_event() {
 
         } else {
 
-	        add_settings_error( 'cio-events', 'save-event', __( 'Error saving this event. An ID Field is required' ) );
+	        add_settings_error( 'cio-events', 'save-event', __( 'Error saving this event. Missing required fields' ) );
 
         }
 
@@ -462,7 +465,7 @@ function do_event_edit_page() {
                                                    name="email_field"
                                                    class="email-field"
                                                    required
-<?php //$form['id'] == $event['form_id'] ? checked( $event['id_field'], $field['id'] ) : null; ?>
+                                                    <?php $form['id'] == $event['form_id'] ? checked( $event['email_field'], $field['id'] ) : null; ?>
                                                    value="<?php esc_attr_e( $field['id'] ); ?>">
                                             <span class="field-label"><?php _e( 'Email Field', 'cio' ); ?></span>
                                         </label>
