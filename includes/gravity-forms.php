@@ -18,7 +18,7 @@ function process_events( $entry, $form ) {
 
 		foreach ( $event['field_map'] as $gf_id => $map ) {
 
-			if ( $gf_id != $event['id_field'] ) {
+			if ( $gf_id != $event['id_field'] && $gf_id != $event['email_field'] ) {
 				
 				switch ( $map['type'] ) {
 					
@@ -37,7 +37,7 @@ function process_events( $entry, $form ) {
 		}
 
 		// Update customer info with fields mapped to this form
-		if ( update_customer( $entry[ $event['id_field'] ], $customer ) ) {
+		if ( update_customer( $entry[ $event['id_field'] ], $entry[ $event['email_field'] ], $customer ) ) {
 
 			// Create an event with mapped fields
 			customer_event( $entry[ $event['id_field'] ], $event['event_name'], $event_data );

@@ -3,16 +3,21 @@
 namespace cio;
 
 
-function update_customer( $id, $data = array() ) {
+function update_customer( $id, $email, $data = array() ) {
 
 	$url = ltrim(API_ENDPOINT . urlencode( $id ), '/' );
 
 	$site_id = get_option( Options::SITE_ID );
 	$api_key = get_option( Options::API_KEY );
 
+	$user_data = array(
+		'email'      => $email,
+		'created_at' => current_time( 'timestamp', 1 )
+	);
+
 	$args = array(
 		'method'  => 'PUT',
-		'body'    => $data,
+		'body'    => array_merge( $data, $user_data ),
 		'headers' => array(
 			'Authorization' => 'Basic ' . base64_encode( "$site_id:$api_key" )
 		)
