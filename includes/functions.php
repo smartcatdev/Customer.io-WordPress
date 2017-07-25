@@ -113,7 +113,6 @@ function get_forms_without_events( $args = array() ) {
 
 	}
 
-
 	return $results;
 
 }
