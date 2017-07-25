@@ -107,7 +107,7 @@ function get_events( array $args = array() ) {
 
 		foreach ( $results as &$event ) {
 
-			$event['field_map'] = unserialize( $event['field_map'] );
+			$event['field_map'] = json_decode( $event['field_map'], true );
 
 		}
 

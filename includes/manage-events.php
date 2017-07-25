@@ -52,18 +52,18 @@ function save_event() {
 
         if ( isset( $_POST['id_field'] ) && isset( $_POST['email_field'] ) ) {
 
-	        $time = current_time( 'mysql', 1 );
-	        $map = array();
+	        $time   = current_time( 'mysql', 1 );
+	        $fields = array();
 
 	        // Group mapped fields with properties and types
-	        foreach ( $_POST['fields'] as $index => $prop ) {
+	        foreach ( $_POST['fields'] as $index => $data ) {
 
-	            if ( !empty( $prop ) ) {
+	            if ( !empty( $data ) ) {
 
-		            $map[ $index ] = array(
-			            'property' => $prop,
-			            'type'     => $_POST['types'][ $index ]
-		            );
+		            $fields[ $index ] = array(
+		                'type' => $_POST['types'][ $index ],
+                        'prop' => $data['prop']
+                    );
 
                 }
 
@@ -75,7 +75,7 @@ function save_event() {
 		        'status'       => 'active',
 		        'id_field'     => intval( $_POST['id_field'] ),
 		        'email_field'  => intval( $_POST['email_field'] ),
-		        'field_map'    => serialize( $map ),
+		        'field_map'    => json_encode( $fields ),
 		        'date_updated' => $time
 	        );
 
@@ -221,16 +221,48 @@ function do_new_event_page() { ?>
 							<th class="col-field-name" scope="row"><?php esc_html_e( $field['label'] ); ?></th>
 							<td class="col-event-prop">
 
-								<?php
+                                <?php if ( !empty( $field['inputs'] ) ) : ?>
 
-                                    $args = array(
-                                        'name'  => "fields[{$field['id']}]",
-                                        'class' => array( 'regular-text', 'field-name' )
-                                    );
+                                    <?php foreach ( $field['inputs'] as $input ) : ?>
 
-                                    make_text_field( $args );
+                                        <?php if ( !$input['isHidden'] ) : ?>
 
-								?>
+                                            <p>
+
+                                                <?php
+
+                                                    $args = array(
+                                                        'name'  => "fields[{$field['id']}][prop][{$input['id']}]",
+                                                        'class' => array( 'regular-text', 'field-input' )
+                                                    );
+
+                                                ?>
+
+                                                <label>
+                                                    <?php esc_html_e( $input['label'] ); ?>
+                                                    <?php make_text_field( $args ); ?>
+                                                </label>
+
+                                            </p>
+
+                                        <?php endif; ?>
+
+                                    <?php endforeach; ?>
+
+                                <?php else : ?>
+
+                                    <?php
+
+                                        $args = array(
+                                            'name'  => "fields[{$field['id']}][prop]",
+                                            'class' => array( 'regular-text', 'field-name' )
+                                        );
+
+                                        make_text_field( $args );
+
+                                    ?>
+
+                                <?php endif; ?>
 
 							</td>
                             <td class="col-data-type">
@@ -251,26 +283,32 @@ function do_new_event_page() { ?>
                                         ?>
                                 </label>
                             </td>
-                            <td class="col-id-field">
-                                <label>
-                                    <input type="radio"
-                                           name="id_field"
-                                           class="id-field"
-                                           required
-                                           value="<?php esc_attr_e( $field['id'] ); ?>">
-                                    <span class="field-label"><?php _e( 'ID Field', 'cio' ); ?></span>
-                                </label>
-                            </td>
-                            <td class="col-email-field">
-                                <label>
-                                    <input type="radio"
-                                           name="email_field"
-                                           class="email-field"
-                                           required
-                                           value="<?php esc_attr_e( $field['id'] ); ?>">
-                                    <span class="field-label"><?php _e( 'Email Field', 'cio' ); ?></span>
-                                </label>
-                            </td>
+
+                            <?php if ( empty( $field['inputs'] ) ) : ?>
+
+                                <td class="col-id-field">
+                                    <label>
+                                        <input type="radio"
+                                               name="id_field"
+                                               class="id-field"
+                                               required
+                                               value="<?php esc_attr_e( $field['id'] ); ?>">
+                                        <span class="field-label"><?php _e( 'ID Field', 'cio' ); ?></span>
+                                    </label>
+                                </td>
+                                <td class="col-email-field">
+                                    <label>
+                                        <input type="radio"
+                                               name="email_field"
+                                               class="email-field"
+                                               required
+                                               value="<?php esc_attr_e( $field['id'] ); ?>">
+                                        <span class="field-label"><?php _e( 'Email Field', 'cio' ); ?></span>
+                                    </label>
+                                </td>
+
+                            <?php endif; ?>
+
 						</tr>
 
 					<?php endforeach; ?>
@@ -394,19 +432,54 @@ function do_event_edit_page() {
                                     <th class="col-field-name" scope="row"><?php esc_html_e( $field['label'] ); ?></th>
                                     <td class="col-event-prop">
 
-                                        <?php
+                                        <?php if ( !empty( $field['inputs'] ) ) : ?>
 
-                                            $args = array(
-                                                'name'  => "fields[{$field['id']}]",
-                                                'value' => !empty( $event['field_map'][ $field['id'] ]['property'] )
-                                                                 ? $event['field_map'][ $field['id'] ]['property']
-                                                                 : '',
-                                                'class' => array( 'regular-text', 'field-name' )
-                                            );
+                                            <?php foreach ( $field['inputs'] as $input ) : ?>
 
-                                            make_text_field( $args );
+                                                <?php if ( !$input['isHidden'] ) : ?>
 
-                                        ?>
+                                                    <p>
+
+				                                        <?php
+
+                                                            $args = array(
+                                                                'name'  => "fields[{$field['id']}][prop][{$input['id']}]",
+                                                                'value' => !empty( $event['field_map'][ $field['id'] ]['prop'][ $input['id'] ] )
+                                                                                 ? $event['field_map'][ $field['id'] ]['prop'][ $input['id'] ]
+                                                                                 : '',
+                                                                'class' => array( 'regular-text', 'field-input' )
+                                                            );
+
+				                                        ?>
+
+                                                        <label>
+					                                        <?php esc_html_e( $input['label'] ); ?>
+					                                        <?php make_text_field( $args ); ?>
+                                                        </label>
+
+                                                    </p>
+
+                                                <?php endif; ?>
+
+                                            <?php endforeach; ?>
+
+                                        <?php else : ?>
+
+                                            <?php
+
+                                                $args = array(
+                                                    'name'  => "fields[{$field['id']}]",
+                                                    'value' => !empty( $event['field_map'][ $field['id'] ]['prop'] )
+                                                                     ? $event['field_map'][ $field['id'] ]['prop']
+                                                                     : '',
+                                                    'class' => array( 'regular-text', 'field-name' )
+                                                );
+
+                                                make_text_field( $args );
+
+                                            ?>
+
+                                        <?php endif; ?>
 
                                     </td>
                                     <td class="col-data-type">
@@ -432,28 +505,34 @@ function do_event_edit_page() {
 
                                         </label>
                                     </td>
-                                    <td class="col-id-field">
-                                        <label>
-                                            <input type="radio"
-                                                   name="id_field"
-                                                   class="id-field"
-                                                   required
-                                                   <?php $form['id'] == $event['form_id'] ? checked( $event['id_field'], $field['id'] ) : null; ?>
-                                                   value="<?php esc_attr_e( $field['id'] ); ?>">
-                                            <span class="field-label"><?php _e( 'ID Field', 'cio' ); ?></span>
-                                        </label>
-                                    </td>
-                                    <td class="col-email-field">
-                                        <label>
-                                            <input type="radio"
-                                                   name="email_field"
-                                                   class="email-field"
-                                                   required
-                                                    <?php $form['id'] == $event['form_id'] ? checked( $event['email_field'], $field['id'] ) : null; ?>
-                                                   value="<?php esc_attr_e( $field['id'] ); ?>">
-                                            <span class="field-label"><?php _e( 'Email Field', 'cio' ); ?></span>
-                                        </label>
-                                    </td>
+
+                                    <?php if ( empty( $field['inputs'] ) ) : ?>
+
+                                        <td class="col-id-field">
+                                            <label>
+                                                <input type="radio"
+                                                       name="id_field"
+                                                       class="id-field"
+                                                       required
+                                                       <?php $form['id'] == $event['form_id'] ? checked( $event['id_field'], $field['id'] ) : null; ?>
+                                                       value="<?php esc_attr_e( $field['id'] ); ?>">
+                                                <span class="field-label"><?php _e( 'ID Field', 'cio' ); ?></span>
+                                            </label>
+                                        </td>
+                                        <td class="col-email-field">
+                                            <label>
+                                                <input type="radio"
+                                                       name="email_field"
+                                                       class="email-field"
+                                                       required
+                                                        <?php $form['id'] == $event['form_id'] ? checked( $event['email_field'], $field['id'] ) : null; ?>
+                                                       value="<?php esc_attr_e( $field['id'] ); ?>">
+                                                <span class="field-label"><?php _e( 'Email Field', 'cio' ); ?></span>
+                                            </label>
+                                        </td>
+
+                                    <?php endif; ?>
+
                                 </tr>
                             </tbody>
 
