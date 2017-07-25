@@ -10,9 +10,9 @@ const API_ENDPOINT = 'https://track.customer.io/api/v1/customers/';
 
 interface Options {
 
-	const API_KEY = 'cio-api-key';
+    const API_KEY = 'cio-api-key';
 
-	const SITE_ID = 'cio-site-id';
+    const SITE_ID = 'cio-site-id';
 
 }
 

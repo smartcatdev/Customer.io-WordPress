@@ -3,7 +3,7 @@
     display: none;
 }
 
-@media( min-width: 783px ) {
+@media ( min-width: 783px ) {
 
     .field-map-table .col-event-prop {
         max-width: 100px;
@@ -40,7 +40,7 @@
     .field-map-table thead {
         display: table-header-group;
     }
-    
+
     .field-map-table .col-data-type .label {
         display: none;
     }

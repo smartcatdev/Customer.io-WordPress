@@ -1,69 +1,68 @@
-jQuery( document ).ready( function ( $ ) {
+jQuery(document).ready(function ($) {
 
-    $( '.gf-select' ).change( function () {
+    $('.gf-select').change(function () {
 
-        $( 'form.cio-edit-map' ).append( '<input type="hidden" name="load_fields" />' );
+        $('form.cio-edit-map').append('<input type="hidden" name="load_fields" />');
 
-        $( '#submit' ).attr( 'formnovalidate', true )
-            .trigger( 'click' );
+        $('#submit').attr('formnovalidate', true)
+            .trigger('click');
 
-    } );
-
-
-    $( '.email-field' ).change( function () {
-
-        // Reset all
-        $( '.field-name' ).filter( function ( index, el ) {
-
-            return ! $( el ).parents( 'tr' )
-                        .find( '.id-field' )
-                        .attr( 'checked' );
-
-        } ).prop( 'disabled', false );
-
-        // Set only the corresponding field to disabled
-        $( this ).parents( 'tr' )
-            .find( '.field-name' )
-            .val( '' )
-            .prop( 'disabled', true );
-
-    } );
-
-    $( '.email-field' ).filter( function ( index, el ) {
-
-        return $( el ).prop( 'checked' )
-
-    } ).parents( 'tr' )
-        .find( '.field-name' )
-        .prop( 'disabled', true );
+    });
 
 
-
-    $( '.id-field' ).change( function () {
+    $('.email-field').change(function () {
 
         // Reset all
-        $( '.field-name' ).filter( function ( index, el ) {
+        $('.field-name').filter(function (index, el) {
 
-            return ! $( el ).parents( 'tr' )
-                        .find( '.email-field' )
-                        .attr( 'checked' );
+            return !$(el).parents('tr')
+                .find('.id-field')
+                .attr('checked');
 
-        } ).prop( 'disabled', false );
+        }).prop('disabled', false);
 
         // Set only the corresponding field to disabled
-        $( this ).parents( 'tr' )
-            .find( '.field-name' )
-            .val( '' )
-            .prop( 'disabled', true );
+        $(this).parents('tr')
+            .find('.field-name')
+            .val('')
+            .prop('disabled', true);
 
-    } );
+    });
 
-    $( '.id-field' ).filter( function ( index, el ) {
+    $('.email-field').filter(function (index, el) {
 
-        return $( el ).prop( 'checked' )
+        return $(el).prop('checked')
 
-    } ).parents( 'tr' )
-        .find( '.field-name' )
-        .prop( 'disabled', true );
+    }).parents('tr')
+        .find('.field-name')
+        .prop('disabled', true);
 
-} );
+
+    $('.id-field').change(function () {
+
+        // Reset all
+        $('.field-name').filter(function (index, el) {
+
+            return !$(el).parents('tr')
+                .find('.email-field')
+                .attr('checked');
+
+        }).prop('disabled', false);
+
+        // Set only the corresponding field to disabled
+        $(this).parents('tr')
+            .find('.field-name')
+            .val('')
+            .prop('disabled', true);
+
+    });
+
+    $('.id-field').filter(function (index, el) {
+
+        return $(el).prop('checked')
+
+    }).parents('tr')
+        .find('.field-name')
+        .prop('disabled', true);
+
+});

@@ -3,8 +3,8 @@
 namespace cio;
 
 
-if( !defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-	die;
+if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
+    die;
 }
 
 include_once 'constants.php';
@@ -19,6 +19,6 @@ $options = new \ReflectionClass( Options::class );
 
 foreach ( $options->getConstants() as $option ) {
 
-	delete_option( $option );
+    delete_option( $option );
 
 }

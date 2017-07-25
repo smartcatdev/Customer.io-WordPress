@@ -4,11 +4,11 @@ namespace cio;
 
 function create_tables() {
 
-	global $wpdb;
+    global $wpdb;
 
-	include_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    include_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-	$q = "CREATE TABLE {$wpdb->prefix}cio_events (
+    $q = "CREATE TABLE {$wpdb->prefix}cio_events (
 			id			INT AUTO_INCREMENT,
 			form_id 	INT NOT NULL,
 			event_name	VARCHAR( 25 ),
@@ -21,7 +21,7 @@ function create_tables() {
 			UNIQUE KEY ID (id)
 		 )";
 
-	dbDelta( $q );
+    dbDelta( $q );
 
 }
 

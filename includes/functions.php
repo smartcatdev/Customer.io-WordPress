@@ -5,169 +5,169 @@ namespace cio;
 
 function update_customer( $id, $email, $data = array() ) {
 
-	$url = ltrim(API_ENDPOINT . urlencode( $id ), '/' );
+    $url = ltrim( API_ENDPOINT . urlencode( $id ), '/' );
 
-	$site_id = get_option( Options::SITE_ID );
-	$api_key = get_option( Options::API_KEY );
+    $site_id = get_option( Options::SITE_ID );
+    $api_key = get_option( Options::API_KEY );
 
-	$user_data = array(
-		'email'      => $email,
-		'created_at' => current_time( 'timestamp', 1 )
-	);
+    $user_data = array(
+        'email'      => $email,
+        'created_at' => current_time( 'timestamp', 1 )
+    );
 
-	$args = array(
-		'method'  => 'PUT',
-		'body'    => array_merge( $data, $user_data ),
-		'headers' => array(
-			'Authorization' => 'Basic ' . base64_encode( "$site_id:$api_key" )
-		)
-	);
+    $args = array(
+        'method'  => 'PUT',
+        'body'    => array_merge( $data, $user_data ),
+        'headers' => array(
+            'Authorization' => 'Basic ' . base64_encode( "$site_id:$api_key" )
+        )
+    );
 
-	$res = wp_remote_request( $url, $args );
+    $res = wp_remote_request( $url, $args );
 
-	return $res['response']['code'] === 200;
+    return $res['response']['code'] === 200;
 
 }
 
 
 function customer_event( $customer_id, $name, $data = array() ) {
 
-	$url = trim( API_ENDPOINT . urlencode( $customer_id ), '/' ) . '/events';
+    $url = trim( API_ENDPOINT . urlencode( $customer_id ), '/' ) . '/events';
 
-	$site_id = get_option( Options::SITE_ID );
-	$api_key = get_option( Options::API_KEY );
+    $site_id = get_option( Options::SITE_ID );
+    $api_key = get_option( Options::API_KEY );
 
-	$body = array(
-		'name' => $name,
-		'data' => $data
-	);
+    $body = array(
+        'name' => $name,
+        'data' => $data
+    );
 
-	$args = array(
-		'method'  => 'POST',
-		'body'    => $body,
-		'headers' => array(
-			'Authorization' => 'Basic ' . base64_encode( "$site_id:$api_key" )
-		)
-	);
+    $args = array(
+        'method'  => 'POST',
+        'body'    => $body,
+        'headers' => array(
+            'Authorization' => 'Basic ' . base64_encode( "$site_id:$api_key" )
+        )
+    );
 
 
-	$res = wp_remote_request( $url, $args );
+    $res = wp_remote_request( $url, $args );
 
-	return $res['response']['code'] === 200;
+    return $res['response']['code'] === 200;
 
 }
 
 function get_forms() {
 
-	$forms   = \GFAPI::get_forms();
-	$results = array();
+    $forms   = \GFAPI::get_forms();
+    $results = array();
 
-	foreach ( $forms as $form ) {
+    foreach ( $forms as $form ) {
 
-		$results[ $form['id'] ] = $form['title'];
+        $results[ $form['id'] ] = $form['title'];
 
-	}
+    }
 
-	return $results;
+    return $results;
 
 }
 
 
 function get_forms_without_events( $args = array() ) {
 
-	$defaults = array(
-		'include' => null
-	);
+    $defaults = array(
+        'include' => null
+    );
 
-	$args = wp_parse_args( $args, $defaults );
+    $args = wp_parse_args( $args, $defaults );
 
-	$events  = get_events();
-	$results = array();
+    $events  = get_events();
+    $results = array();
 
-	$forms  = \GFAPI::get_forms();
-
-
-	$events = $events ? $events : array();
+    $forms = \GFAPI::get_forms();
 
 
-	foreach ( $forms as $form ) {
+    $events = $events ? $events : array();
 
-		$has_event = false;
 
-		foreach ( $events as $event ) {
+    foreach ( $forms as $form ) {
 
-			if ( $event['form_id'] == $form['id'] && $form['id'] != $args['include'] ) {
+        $has_event = false;
 
-				$has_event = true;
-				break;
+        foreach ( $events as $event ) {
 
-			}
+            if ( $event['form_id'] == $form['id'] && $form['id'] != $args['include'] ) {
 
-		}
+                $has_event = true;
+                break;
 
-		if ( !$has_event ) {
+            }
 
-			$results[ $form['id'] ] = $form['title'];
+        }
 
-		}
+        if ( ! $has_event ) {
 
-	}
+            $results[ $form['id'] ] = $form['title'];
 
-	return $results;
+        }
+
+    }
+
+    return $results;
 
 }
 
 
 function get_events( array $args = array() ) {
 
-	global $wpdb;
+    global $wpdb;
 
-	$defaults = array(
-		'id'   => false,
-		'form' => false
-	);
+    $defaults = array(
+        'id'   => false,
+        'form' => false
+    );
 
-	$args = wp_parse_args( $args, $defaults );
+    $args = wp_parse_args( $args, $defaults );
 
-	$q = "SELECT * FROM {$wpdb->prefix}cio_events WHERE true = true ";
-	$v = array();
+    $q = "SELECT * FROM {$wpdb->prefix}cio_events WHERE true = true ";
+    $v = array();
 
-	if ( $args['id'] ) {
+    if ( $args['id'] ) {
 
-		$q  .= " AND id = %d ";
-		$v[] = $args['id'];
-	}
+        $q   .= " AND id = %d ";
+        $v[] = $args['id'];
+    }
 
-	if ( $args['form'] ) {
+    if ( $args['form'] ) {
 
-		$q  .= " AND form_id = %d ";
-		$v[] = $args['form'];
+        $q   .= " AND form_id = %d ";
+        $v[] = $args['form'];
 
-	}
-
-
-	if ( $args['id'] || $args['form'] ) {
-
-		$q = $wpdb->prepare( $q, $v );
-
-	}
-
-	$results = $wpdb->get_results( $q, ARRAY_A );
+    }
 
 
-	if ( !empty( $results ) ) {
+    if ( $args['id'] || $args['form'] ) {
 
-		foreach ( $results as &$event ) {
+        $q = $wpdb->prepare( $q, $v );
 
-			$event['field_map'] = json_decode( $event['field_map'], true );
+    }
 
-		}
-
-		return $results;
-
-	}
+    $results = $wpdb->get_results( $q, ARRAY_A );
 
 
-	return false;
+    if ( ! empty( $results ) ) {
+
+        foreach ( $results as &$event ) {
+
+            $event['field_map'] = json_decode( $event['field_map'], true );
+
+        }
+
+        return $results;
+
+    }
+
+
+    return false;
 
 }
