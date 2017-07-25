@@ -84,31 +84,30 @@ function get_forms_without_events( $args = array() ) {
 	$events  = get_events();
 	$results = array();
 
+	$forms  = \GFAPI::get_forms();
 
-	if ( $events ) {
 
-		$forms  = \GFAPI::get_forms();
+	$events = $events ? $events : array();
 
-		foreach ( $forms as $form ) {
 
-			$has_event = false;
+	foreach ( $forms as $form ) {
 
-			foreach ( $events as $event ) {
+		$has_event = false;
 
-				if ( $event['form_id'] == $form['id'] && $form['id'] != $args['include'] ) {
+		foreach ( $events as $event ) {
 
-					$has_event = true;
-					break;
+			if ( $event['form_id'] == $form['id'] && $form['id'] != $args['include'] ) {
 
-				}
-
-			}
-
-			if ( !$has_event ) {
-
-				$results[ $form['id'] ] = $form['title'];
+				$has_event = true;
+				break;
 
 			}
+
+		}
+
+		if ( !$has_event ) {
+
+			$results[ $form['id'] ] = $form['title'];
 
 		}
 
