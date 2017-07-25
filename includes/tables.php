@@ -25,4 +25,3 @@ function create_tables() {
 
 }
 
-add_action( 'admin_init', 'cio\create_tables' );

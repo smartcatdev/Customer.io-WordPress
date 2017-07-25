@@ -23,7 +23,6 @@ function init() {
 	include_once dirname( __FILE__ ) . '/includes/ListTable.php';
 	include_once dirname( __FILE__ ) . '/includes/EventsTable.php';
 	include_once dirname( __FILE__ ) . '/includes/admin-settings.php';
-	include_once dirname( __FILE__ ) . '/includes/tables.php';
 	include_once dirname( __FILE__ ) . '/includes/manage-events.php';
 	include_once dirname( __FILE__ ) . '/includes/gravity-forms.php';
 
@@ -32,8 +31,20 @@ function init() {
 add_action( 'plugins_loaded', 'cio\init' );
 
 
+function activate() {
+
+	include_once dirname( __FILE__ ) . '/includes/tables.php';
+
+	create_tables();
+
+}
+
+register_activation_hook( __FILE__, 'cio\activate' );
+
+
 function asset( $path = '' ) {
 
 	return trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/' ) . ltrim( $path, '/' );
 
 }
+

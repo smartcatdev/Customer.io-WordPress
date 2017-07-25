@@ -2,8 +2,6 @@
 
 namespace cio;
 
-// TODO disable email and ID forms when selected
-
 
 function enqueue_editor_scripts() {
 
@@ -13,20 +11,6 @@ function enqueue_editor_scripts() {
 }
 
 add_action( 'admin_enqueue_scripts', 'cio\enqueue_editor_scripts' );
-
-
-function set_active_menu_item() {
-
-    global $parent_file, $submenu_file;
-
-    if ( isset( $_GET['page'] ) && strpos( $_GET['page'], 'cio' ) !== false ) {
-
-
-    }
-
-}
-
-add_filter( 'admin_head', 'cio\set_active_menu_item' );
 
 
 function do_form_events_tab( $tab ) {
