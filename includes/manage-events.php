@@ -43,11 +43,11 @@ function add_edit_pages() {
 
     if ( apply_filters( 'cio_do_black_magic', false ) ) {
 
-	    add_submenu_page( 'customer-io', __( 'Add New Event', 'cio' ), '', 'edit_posts', 'cio-new-event', 'cio\do_new_event_page' );
+	    add_submenu_page( 'options.php', __( 'Add New Event', 'cio' ), '', 'edit_posts', 'cio-new-event', 'cio\do_new_event_page' );
 
     }
 
-	add_submenu_page( 'customer-io', __( 'Edit Event', 'cio' ), '', 'edit_posts', 'cio-edit-event', 'cio\do_event_edit_page' );
+	add_submenu_page( 'options.php', __( 'Edit Event', 'cio' ), '', 'edit_posts', 'cio-edit-event', 'cio\do_event_edit_page' );
 
 }
 

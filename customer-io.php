@@ -18,17 +18,36 @@ include_once 'constants.php';
 
 function init() {
 
-	include_once dirname( __FILE__ ) . '/includes/functions.php';
-	include_once dirname( __FILE__ ) . '/includes/helpers.php';
-	include_once dirname( __FILE__ ) . '/includes/ListTable.php';
-	include_once dirname( __FILE__ ) . '/includes/EventsTable.php';
-	include_once dirname( __FILE__ ) . '/includes/admin-settings.php';
-	include_once dirname( __FILE__ ) . '/includes/manage-events.php';
-	include_once dirname( __FILE__ ) . '/includes/gravity-forms.php';
+	if ( class_exists( '\GFAPI' ) ) {
+
+		include_once dirname( __FILE__ ) . '/includes/functions.php';
+		include_once dirname( __FILE__ ) . '/includes/helpers.php';
+		include_once dirname( __FILE__ ) . '/includes/ListTable.php';
+		include_once dirname( __FILE__ ) . '/includes/EventsTable.php';
+		include_once dirname( __FILE__ ) . '/includes/admin-settings.php';
+		include_once dirname( __FILE__ ) . '/includes/manage-events.php';
+		include_once dirname( __FILE__ ) . '/includes/gravity-forms.php';
+
+	}
 
 }
 
 add_action( 'plugins_loaded', 'cio\init' );
+
+
+function notify_gravity_forms_not_active() {
+
+	if ( !class_exists( '\GFAPI' ) ) { ?>
+
+		<div class="notice notice-error is-dismissible">
+			<p><?php _e( '<strong>Customer.io</strong> required Gravity Forms to be active.', 'cio' ); ?></p>
+		</div>
+
+	<? }
+
+}
+
+add_action( 'admin_notices', 'cio\notify_gravity_forms_not_active' );
 
 
 function activate() {
