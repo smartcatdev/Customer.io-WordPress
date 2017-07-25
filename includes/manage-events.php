@@ -236,7 +236,7 @@ function do_new_event_page() { ?>
 
                                     <?php foreach ( $field['inputs'] as $input ) : ?>
 
-                                        <?php if ( !$input['isHidden'] ) : ?>
+                                        <?php if ( empty( $input['isHidden'] ) ) : ?>
 
                                             <p>
 
@@ -447,7 +447,7 @@ function do_event_edit_page() {
 
                                             <?php foreach ( $field['inputs'] as $input ) : ?>
 
-                                                <?php if ( !$input['isHidden'] ) : ?>
+                                                <?php if ( empty( $input['isHidden'] ) ) : ?>
 
                                                     <p>
 

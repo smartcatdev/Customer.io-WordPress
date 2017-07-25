@@ -144,7 +144,13 @@ function get_events( array $args = array() ) {
 	}
 
 
-	$results = $wpdb->get_results( $wpdb->prepare( $q, $v ), ARRAY_A );
+	if ( $args['id'] || $args['form'] ) {
+
+		$q = $wpdb->prepare( $q, $v );
+
+	}
+
+	$results = $wpdb->get_results( $q, ARRAY_A );
 
 
 	if ( !empty( $results ) ) {
