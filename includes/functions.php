@@ -81,35 +81,39 @@ function get_forms_without_events( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
-
-	$events = get_events();
-	$forms  = \GFAPI::get_forms();
-
+	$events  = get_events();
 	$results = array();
 
 
-	foreach ( $forms as $form ) {
+	if ( $events ) {
 
-		$has_event = false;
+		$forms  = \GFAPI::get_forms();
 
-		foreach ( $events as $event ) {
+		foreach ( $forms as $form ) {
 
-			if ( $event['form_id'] == $form['id'] && $form['id'] != $args['include'] ) {
+			$has_event = false;
 
-				$has_event = true;
-				break;
+			foreach ( $events as $event ) {
+
+				if ( $event['form_id'] == $form['id'] && $form['id'] != $args['include'] ) {
+
+					$has_event = true;
+					break;
+
+				}
+
+			}
+
+			if ( !$has_event ) {
+
+				$results[ $form['id'] ] = $form['title'];
 
 			}
 
 		}
 
-		if ( !$has_event ) {
-
-			$results[ $form['id'] ] = $form['title'];
-
-		}
-
 	}
+
 
 	return $results;
 
