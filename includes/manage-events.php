@@ -18,7 +18,13 @@ function do_form_events_tab( $tab ) {
 	if ( $tab === 'cio-events' ) {
 
 		echo '<h1 class="wp-heading-inline">' . __( 'Events', 'cio' ) . '</h1>';
-		echo '<a href="' . menu_page_url( 'cio-new-event', false ). '" class="page-title-action">' . __( 'Add New', 'cio' ) . '</a>';
+
+		if ( apply_filters( 'cio_do_black_magic', false ) ) {
+
+			echo '<a href="' . menu_page_url( 'cio-new-event', false ). '" class="page-title-action">' . __( 'Add New', 'cio' ) . '</a>';
+
+		}
+
 		echo '<hr class="wp-header-end">';
 
 		$table = new EventsTable();
@@ -35,8 +41,13 @@ add_action( 'cio_menu_page_tab', 'cio\do_form_events_tab' );
 
 function add_edit_pages() {
 
-	add_submenu_page( '', __( 'Add New Event', 'cio' ), '', 'edit_posts', 'cio-new-event', 'cio\do_new_event_page' );
-	add_submenu_page( '', __( 'Edit Event', 'cio' ), '', 'edit_posts', 'cio-edit-event', 'cio\do_event_edit_page' );
+    if ( apply_filters( 'cio_do_black_magic', false ) ) {
+
+	    add_submenu_page( 'customer-io', __( 'Add New Event', 'cio' ), '', 'edit_posts', 'cio-new-event', 'cio\do_new_event_page' );
+
+    }
+
+	add_submenu_page( 'customer-io', __( 'Edit Event', 'cio' ), '', 'edit_posts', 'cio-edit-event', 'cio\do_event_edit_page' );
 
 }
 
@@ -182,7 +193,7 @@ function do_new_event_page() { ?>
 								$args = array(
 									'name'     => 'form_id',
 									'class'    => array( 'regular-text', 'gf-select' ),
-									'options'  => array( '' => __( 'Select a form', 'cio' ) ) + get_forms(),
+									'options'  => array( '' => __( 'Select a form', 'cio' ) ) + get_forms_without_events(),
 									'desc'     => __( '', 'cio'),
 									'selected' => isset( $_POST['form_id'] ) ? $_POST['form_id'] : '',
 									'attrs' => array(
@@ -375,7 +386,7 @@ function do_event_edit_page() {
                                     $args = array(
                                         'name'     => 'form_id',
                                         'class'    => array( 'regular-text', 'gf-select' ),
-                                        'options'  => get_forms(),
+                                        'options'  => get_forms_without_events( array( 'include' => $event['form_id'] ) ),
                                         'desc'     => __( '', 'cio'),
                                         'selected' => isset( $_POST['form_id'] ) ? $_POST['form_id'] : $event['form_id'],
                                         'attrs' => array(
@@ -552,3 +563,12 @@ function do_event_edit_page() {
     <?php endif;
 
 }
+
+
+function do_black_magic() {
+
+    return get_events() === false;
+
+}
+
+add_filter( 'cio_do_black_magic', 'cio\do_black_magic' );
