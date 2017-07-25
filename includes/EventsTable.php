@@ -114,28 +114,30 @@ class EventsTable extends ListTable {
 
 	private function get_events() {
 
-		global $wpdb;
-
-		$q = "SELECT * FROM {$wpdb->prefix}cio_events";
-
 		$forms  = \GFAPI::get_forms();
-		$events = $wpdb->get_results( $q, ARRAY_A );
+		$events = get_events();
 
-		foreach ( $events as &$event ) {
+		if ( $events ) {
 
-			$form = array_filter( $forms, function ( $form ) use ( $event ) {
+			foreach ( $events as &$event ) {
 
-				return $event['form_id'] == $form['id'];
+				$form = current( array_filter( $forms, function ( $form ) use ( $event ) {
 
-			} );
+					return $event['form_id'] == $form['id'];
 
-			if ( !empty( $forms ) ) {
-				$event['form_name'] = $form[0]['title'];
-            }
+				} ) );
 
-		}
+				if ( !empty( $form ) ) {
 
-		return $events;
+					$event['form_name'] = $form['title'];
+
+				}
+
+			}
+
+        }
+
+		return !empty( $events ) ? $events : array();
 
 	}
 

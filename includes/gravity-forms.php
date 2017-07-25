@@ -9,48 +9,85 @@ function process_events( $entry, $form ) {
 	);
 
 	$events = get_events( $args );
-	$event  = $events[0];
 
-	$customer   = array();
-	$event_data = array();
 
-	foreach ( $event['field_map'] as $gf_id => $map ) {
+	if ( !empty( $events ) ) {
 
-		if ( $gf_id != $event['id_field'] && $gf_id != $event['email_field'] ) {
+		$event = $events[0];
 
-			// Variable variable for data variable
-			$type = $map['type'] == 'customer' ? 'customer' : 'event_data';
+		$customer   = array();
+		$event_data = array();
 
-			if ( is_array( $map['prop'] ) ) {
 
-				foreach ( $map['prop'] as $id => $prop ) {
+		foreach ( $event['field_map'] as $gf_id => $map ) {
 
-					if ( !empty( $prop ) ) {
+			if ( $gf_id != $event['id_field'] && $gf_id != $event['email_field'] ) {
 
-						$$type[ $prop ] = $entry[ $id ];
+				switch ( $map['type'] ) {
 
-					}
+					case 'customer':
+
+						if ( is_array( $map['prop'] ) ) {
+
+							foreach ( $map['prop'] as $id => $prop ) {
+
+								if ( !empty( $prop ) ) {
+
+									$customer[ $prop ] = $entry[ $id ];
+
+								}
+
+							}
+
+						} else {
+
+							$customer[ $map['prop'] ] = $entry[ $gf_id ];
+
+						}
+
+						break;
+
+					case 'event':
+
+						if ( is_array( $map['prop'] ) ) {
+
+							foreach ( $map['prop'] as $id => $prop ) {
+
+								if ( !empty( $prop ) ) {
+
+									$event_data[ $prop ] = $entry[ $id ];
+
+								}
+
+							}
+
+						} else {
+
+							$event_data[ $map['prop'] ] = $entry[ $gf_id ];
+
+						}
+
+						break;
 
 				}
-
-			} else {
-
-				$$type[ $map['prop'] ] = $entry[ $gf_id ];
 
 			}
 
 		}
 
+
+		// Update customer info with fields mapped to this form
+		if ( update_customer( $entry[ $event['id_field'] ], $entry[ $event['email_field'] ], $customer ) ) {
+
+			// Create an event with mapped fields
+			customer_event( $entry[ $event['id_field'] ], $event['event_name'], $event_data );
+
+		}
+
+
 	}
 
 
-	// Update customer info with fields mapped to this form
-	if ( update_customer( $entry[ $event['id_field'] ], $entry[ $event['email_field'] ], $customer ) ) {
-
-		// Create an event with mapped fields
-		customer_event( $entry[ $event['id_field'] ], $event['event_name'], $event_data );
-
-	}
 
 }
 
