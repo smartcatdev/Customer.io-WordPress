@@ -129,7 +129,9 @@ class EventsTable extends ListTable {
 
 			} );
 
-			$event['form_name'] = $form[0]['title'];
+			if ( !empty( $forms ) ) {
+				$event['form_name'] = $form[0]['title'];
+            }
 
 		}
 
