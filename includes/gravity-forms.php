@@ -10,7 +10,6 @@ function process_events( $entry, $form ) {
 
 	$events = get_events( $args );
 
-
 	foreach ( $events as $event ) {
 
 		$customer   = array();
@@ -19,22 +18,32 @@ function process_events( $entry, $form ) {
 		foreach ( $event['field_map'] as $gf_id => $map ) {
 
 			if ( $gf_id != $event['id_field'] && $gf_id != $event['email_field'] ) {
-				
-				switch ( $map['type'] ) {
-					
-					case 'customer':
-						$customer[ $map['property'] ] = $entry[ $gf_id ];
-						break;
-						
-					case 'event':
-						$event_data[ $map['property'] ] = $entry[ $gf_id ];
-						break;
-					
+
+				// Variable variable for data variable
+				$type = $map['type'] == 'customer' ? 'customer' : 'event_data';
+
+				if ( is_array( $map['prop'] ) ) {
+
+					foreach ( $map['prop'] as $id => $prop ) {
+
+						if ( !empty( $prop ) ) {
+
+							$$type[ $prop ] = $entry[ $id ];
+
+						}
+
+					}
+
+				} else {
+
+					$$type[ $map['prop'] ] = $entry[ $gf_id ];
+
 				}
 
 			}
 
 		}
+
 
 		// Update customer info with fields mapped to this form
 		if ( update_customer( $entry[ $event['id_field'] ], $entry[ $event['email_field'] ], $customer ) ) {
