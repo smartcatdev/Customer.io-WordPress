@@ -43,7 +43,7 @@ function notify_gravity_forms_not_active() {
 			<p><?php _e( '<strong>Customer.io</strong> required Gravity Forms to be active.', 'cio' ); ?></p>
 		</div>
 
-	<? }
+	<?php }
 
 }
 
