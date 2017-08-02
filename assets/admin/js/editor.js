@@ -9,4 +9,9 @@ jQuery(document).ready(function ($) {
 
     });
 
+    $('.cio-menu-hidden').each(function () {
+        $(this).parents('li').first().hide();
+    });
+
+
 });

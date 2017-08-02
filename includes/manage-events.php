@@ -43,15 +43,33 @@ function add_edit_pages() {
 
     if ( apply_filters( 'cio_do_black_magic', false ) ) {
 
-        add_submenu_page( 'options.php', __( 'Add New Event', 'cio' ), '', 'edit_posts', 'cio-new-event', 'cio\do_new_event_page' );
+        add_submenu_page( 'gf_edit_forms', __( 'Add New Event', 'cio' ), '<span class="cio-menu-hidden"></span>', 'edit_posts', 'cio-new-event', 'cio\do_new_event_page' );
 
     }
 
-    add_submenu_page( 'options.php', __( 'Edit Event', 'cio' ), '', 'edit_posts', 'cio-edit-event', 'cio\do_event_edit_page' );
+    add_submenu_page( 'gf_edit_forms', __( 'Edit Event', 'cio' ), '<span class="cio-menu-hidden"></span>', 'edit_posts', 'cio-edit-event', 'cio\do_event_edit_page' );
 
 }
 
 add_action( 'admin_menu', 'cio\add_edit_pages', 200 );
+
+
+function force_submenu_open () {
+
+	global $parent_file, $submenu_file;
+
+	$screen = get_current_screen();
+
+	if ( strpos( $screen->id, 'cio-new' ) !== false || strpos( $screen->id, 'cio-edit' ) ) {
+
+		$parent_file  = 'gf_edit_forms';
+		$submenu_file = 'customer-io';
+
+	}
+
+}
+
+add_filter( 'parent_file', 'cio\force_submenu_open' );
 
 
 function save_event() {
