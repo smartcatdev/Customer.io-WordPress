@@ -176,7 +176,13 @@ function do_new_event_page() { ?>
 
         <?php settings_errors( 'cio-events' ); ?>
 
-        <h2><?php _e( 'Add New Event', 'cio' ); ?></h2>
+        <h2><?php _e( 'Add New Event', 'cio' ); ?>
+
+            <?php $arg = array( 'page' => 'customer-io', 'tab' => 'cio-events' ); ?>
+
+            <a class="button default-button" href="<?php echo esc_url( add_query_arg( $arg) ); ?>"><?php _e( 'Back to Events', 'cio' ); ?></a>
+
+        </h2>
 
         <form method="post" class="cio-edit-map">
             <table class="form-table">
@@ -370,7 +376,13 @@ function do_event_edit_page() {
 
             <?php settings_errors( 'cio-events' ); ?>
 
-            <h2><?php _e( 'Edit Event', 'cio' ); ?></h2>
+            <h2><?php _e( 'Edit Event', 'cio' ); ?>
+
+	            <?php $arg = array( 'page' => 'customer-io', 'tab' => 'cio-events' ); ?>
+
+                <a class="button default-button" href="<?php echo esc_url( add_query_arg( $arg) ); ?>"><?php _e( 'Back to Events', 'cio' ); ?></a>
+
+            </h2>
 
             <form method="post" class="cio-edit-map">
                 <table class="form-table">

@@ -13,5 +13,4 @@ jQuery(document).ready(function ($) {
         $(this).parents('li').first().hide();
     });
 
-
 });
