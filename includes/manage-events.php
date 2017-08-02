@@ -60,7 +60,7 @@ function force_submenu_open () {
 
 	$screen = get_current_screen();
 
-	if ( strpos( $screen->id, 'cio-new' ) !== false || strpos( $screen->id, 'cio-edit' ) ) {
+	if ( strpos( $screen->id, 'cio-new' ) !== false || strpos( $screen->id, 'cio-edit' ) !== false ) {
 
 		$parent_file  = 'gf_edit_forms';
 		$submenu_file = 'customer-io';
@@ -180,7 +180,7 @@ function do_new_event_page() { ?>
 
             <?php $arg = array( 'page' => 'customer-io', 'tab' => 'cio-events' ); ?>
 
-            <a class="button default-button" href="<?php echo esc_url( add_query_arg( $arg) ); ?>"><?php _e( 'Back to Events', 'cio' ); ?></a>
+            <a class="button default-button" href="<?php echo esc_url( add_query_arg( $arg ) ); ?>"><?php _e( 'Back to Events', 'cio' ); ?></a>
 
         </h2>
 
