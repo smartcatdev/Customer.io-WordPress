@@ -511,7 +511,7 @@ function do_event_edit_page() {
                                         <?php
 
                                         $args = array(
-                                            'name'  => "fields[{$field['id']}]",
+                                            'name'  => "fields[{$field['id']}][prop]",
                                             'value' => ! empty( $event['field_map'][ $field['id'] ]['prop'] )
                                                 ? $event['field_map'][ $field['id'] ]['prop']
                                                 : '',
