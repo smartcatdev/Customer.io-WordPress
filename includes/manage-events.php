@@ -91,7 +91,9 @@ function save_event() {
 
                     $fields[ $index ] = array(
                         'type' => $_POST['types'][ $index ],
-                        'prop' => $data['prop']
+
+                                  // Either an array of props or just a single prop
+                        'prop' => isset( $data['prop'] ) ? $data['prop'] : $data
                     );
 
                 }
