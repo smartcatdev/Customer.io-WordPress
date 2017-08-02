@@ -21,57 +21,53 @@ function process_events( $entry, $form ) {
 
         foreach ( $event['field_map'] as $gf_id => $map ) {
 
-            if ( $gf_id != $event['id_field'] && $gf_id != $event['email_field'] ) {
+	        switch ( $map['type'] ) {
 
-                switch ( $map['type'] ) {
+		        case 'customer':
 
-                    case 'customer':
+			        if ( is_array( $map['prop'] ) ) {
 
-                        if ( is_array( $map['prop'] ) ) {
+				        foreach ( $map['prop'] as $id => $prop ) {
 
-                            foreach ( $map['prop'] as $id => $prop ) {
+					        if ( ! empty( $prop ) ) {
 
-                                if ( ! empty( $prop ) ) {
+						        $customer[ $prop ] = $entry[ $id ];
 
-                                    $customer[ $prop ] = $entry[ $id ];
+					        }
 
-                                }
+				        }
 
-                            }
+			        } else {
 
-                        } else {
+				        $customer[ $map['prop'] ] = $entry[ $gf_id ];
 
-                            $customer[ $map['prop'] ] = $entry[ $gf_id ];
+			        }
 
-                        }
+			        break;
 
-                        break;
+		        case 'event':
 
-                    case 'event':
+			        if ( is_array( $map['prop'] ) ) {
 
-                        if ( is_array( $map['prop'] ) ) {
+				        foreach ( $map['prop'] as $id => $prop ) {
 
-                            foreach ( $map['prop'] as $id => $prop ) {
+					        if ( ! empty( $prop ) ) {
 
-                                if ( ! empty( $prop ) ) {
+						        $event_data[ $prop ] = $entry[ $id ];
 
-                                    $event_data[ $prop ] = $entry[ $id ];
+					        }
 
-                                }
+				        }
 
-                            }
+			        } else {
 
-                        } else {
+				        $event_data[ $map['prop'] ] = $entry[ $gf_id ];
 
-                            $event_data[ $map['prop'] ] = $entry[ $gf_id ];
+			        }
 
-                        }
+			        break;
 
-                        break;
-
-                }
-
-            }
+	        }
 
         }
 
