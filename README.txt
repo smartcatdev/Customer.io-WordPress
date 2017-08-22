@@ -1,4 +1,4 @@
-=== Customer.io Gravity Forms Integration ===
+=== Customer.io Gravity Forms Add-on ===
 Contributors: smartcat
 Donate link: https://smartcatdesign.net/
 Tags: customer.io,gravity,forms,integration

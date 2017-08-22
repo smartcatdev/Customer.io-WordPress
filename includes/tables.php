@@ -16,8 +16,8 @@ function create_tables() {
 			id_field	INT NOT NULL,
 			email_field	INT NOT NULL,
 			field_map	TEXT,
-			date_created TIMESTAMP,
 			date_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			date_created TIMESTAMP,
 			UNIQUE KEY ID (id)
 		 )";
 
