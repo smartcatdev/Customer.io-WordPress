@@ -7,10 +7,18 @@ Tested up to: 4.8.1
 Stable tag: 0.1
 License: GPLv2 or later
 
-Integrate your Gravity Forms with your Customer.io customers,events and campaigns
+Easily add customers to customer.io when users submit a Gravity Form
 
 == Description ==
 
 This plugin allows you to create a feed for your Gravity Form which automatically passes the data from WordPress to your Customer.io dashboard.
 This allows you to create newsletter forms, contact forms and any type of form in WordPress and select which fields in Customer.io
 the Gravity Forms fields are mapped to.
+
+== Screenshots ==
+1. Mapping fields from Gravity Form to Customer.io
+
+== Changelog ==
+
+= 1.0.0 =
+Initial release
