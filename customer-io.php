@@ -1,9 +1,13 @@
 <?php
 /*
- * Plugin Name: Customer.io
+ * Plugin Name: Customer.io Gravity Forms Add-on
+ * Plugin URI: https://smartcatdesign.net/
+ * Description: Easily add customers to customer.io when users submit a Gravity Form
  * Version: 1.0.0
  * Author: Smartcat
- */
+ * Author URI: https://smartcatdesign.net
+ * License: GPL2
+*/
 
 namespace cio;
 
