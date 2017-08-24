@@ -1,10 +1,10 @@
 === Customer.io Gravity Forms Add-on ===
 Contributors: smartcat
 Donate link: https://smartcatdesign.net/
-Tags: customer.io,gravity,forms,integration
+Tags: customer.io,gravity,forms,integration,marketing
 Requires at least: 4.6
 Tested up to: 4.8.1
-Stable tag: 0.1
+Stable tag: 1.0.0
 License: GPLv2 or later
 
 Easily add customers to customer.io when users submit a Gravity Form
